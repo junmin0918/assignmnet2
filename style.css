@@ -14,7 +14,7 @@ nav {
 nav ul {
   display: flex;
   justify-content: center;
-  gap: 40px;
+  gap: 50px;
   list-style: none;
 }
 nav a {
@@ -34,9 +34,327 @@ nav a:hover {
   margin: 30px auto;
   overflow: hidden;
 }
+.custom-controls {
+
+  position: absolute;
+  bottom: 15px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+#play-pause-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+#play-pause-img {
+  width: 50px;
+  height: 50px;
+  filter: drop-shadow(0 0 8px #ff00ff);
+}
 #custom-video-player {
   width: 100%;
   height: 600px;
   object-fit: cover;
   display: block;
+}
+#custom-video-player.playing {
+  animation: skullPulse 2s ease-in-out infinite;
+  filter: brightness(1.15) drop-shadow(0 0 15px #ff00ff);
+
+}
+
+@keyframes skullPulse {
+  0% {
+    transform: scale(1);
+     filter: brightness(0.7) drop-shadow(0 0 10px #ff00ff);
+  }
+
+  50% {
+    transform: scale(1.01);
+     filter: brightness(0.9) drop-shadow(0 0 30px #a855f7);
+  }
+
+  100% {
+    transform: scale(1);
+     filter: brightness(0.7) drop-shadow(0 0 10px #ff00ff);
+  }
+}
+.splash {
+  position: absolute;
+
+  left: 50%;
+  top: 50%;
+
+  width: 0;
+  height: 0;
+
+  pointer-events: none;
+
+  z-index: 5;
+}
+
+
+/* =========================
+   LIQUID PARTICLES
+   ========================= */
+
+.splash span {
+  position: absolute;
+
+  border-radius: 60% 40% 70% 30%;
+
+  opacity: 0;
+
+  filter: blur(1px);
+
+  box-shadow:
+    0 0 12px currentColor,
+    0 0 30px currentColor,
+    0 0 60px #ff2bd6,
+    0 0 90px #a855f7;
+}
+
+
+/* Activate splash */
+
+.media-player.playing .splash span {
+  animation: liquidExplosion 1.4s ease-out infinite;
+}
+
+
+/* =========================
+   PARTICLE 1
+   LEFT UP ↖
+   ========================= */
+
+.splash span:nth-child(1) {
+
+  width: 90px;
+  height: 55px;
+
+  background: #a855f7;
+  color: #a855f7;
+
+  --x: -180px;
+  --y: -130px;
+
+  animation-delay: 0s;
+}
+
+
+/* =========================
+   PARTICLE 2
+   UP ↑
+   ========================= */
+
+.splash span:nth-child(2) {
+
+  width: 30px;
+  height: 70px;
+
+  background: #ff2bd6;
+  color: #ff2bd6;
+
+  --x: 0px;
+  --y: -200px;
+
+  animation-delay: 0.08s;
+}
+
+
+/* =========================
+   PARTICLE 3
+   RIGHT UP ↗
+   ========================= */
+
+.splash span:nth-child(3) {
+
+  width: 65px;
+  height: 45px;
+
+  background: #c026d3;
+  color: #c026d3;
+
+  --x: 180px;
+  --y: -130px;
+
+  animation-delay: 0.15s;
+}
+
+
+/* =========================
+   PARTICLE 4
+   RIGHT →
+   ========================= */
+
+.splash span:nth-child(4) {
+
+  width: 100px;
+  height: 60px;
+
+  background: #ff2bd6;
+  color: #ff2bd6;
+
+  --x: 240px;
+  --y: 0px;
+
+  animation-delay: 0.04s;
+}
+
+
+/* =========================
+   PARTICLE 5
+   RIGHT DOWN ↘
+   ========================= */
+
+.splash span:nth-child(5) {
+
+  width: 35px;
+  height: 70px;
+
+  background: #e879f9;
+  color: #e879f9;
+
+  --x: 180px;
+  --y: 140px;
+
+  animation-delay: 0.12s;
+}
+
+
+/* =========================
+   PARTICLE 6
+   DOWN ↓
+   ========================= */
+
+.splash span:nth-child(6) {
+
+  width: 80px;
+  height: 50px;
+
+  background: #ec4899;
+  color: #ec4899;
+
+  --x: 0px;
+  --y: 210px;
+
+  animation-delay: 0.2s;
+}
+
+
+/* =========================
+   PARTICLE 7
+   LEFT DOWN ↙
+   ========================= */
+
+.splash span:nth-child(7) {
+
+  width: 25px;
+  height: 55px;
+
+  background: #8b5cf6;
+  color: #8b5cf6;
+
+  --x: -180px;
+  --y: 140px;
+
+  animation-delay: 0.1s;
+}
+
+
+/* =========================
+   PARTICLE 8
+   LEFT ←
+   ========================= */
+
+.splash span:nth-child(8) {
+
+  width: 70px;
+  height: 45px;
+
+  background: #d946ef;
+  color: #d946ef;
+
+  --x: -240px;
+  --y: 0px;
+
+  animation-delay: 0.18s;
+}
+
+
+/* =========================
+   LIQUID EXPLOSION
+   ========================= */
+
+@keyframes liquidExplosion {
+
+  /* Start from the centre */
+  0% {
+
+    transform:
+      translate(0, 0)
+      scale(0);
+
+    opacity: 0;
+  }
+
+
+  /* BIG BOOM */
+  12% {
+
+    transform:
+      translate(0, 0)
+      scale(1.5);
+
+    opacity: 1;
+  }
+
+
+  /* Start flying outward */
+  30% {
+
+    transform:
+      translate(
+        calc(var(--x) * 0.3),
+        calc(var(--y) * 0.3)
+      )
+      scale(1.15);
+
+    opacity: 0.95;
+  }
+
+
+  /* Continue explosion */
+  65% {
+
+    transform:
+      translate(
+        calc(var(--x) * 0.7),
+        calc(var(--y) * 0.7)
+      )
+      scale(0.75);
+
+    opacity: 0.65;
+  }
+
+
+  /* Disappear */
+  100% {
+
+    transform:
+      translate(
+        var(--x),
+        var(--y)
+      )
+      scale(0.15);
+
+    opacity: 0;
+  }
 }
