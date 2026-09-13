@@ -1,8 +1,21 @@
+// =========================
+// GET ELEMENTS
+// =========================
+
 const video = document.getElementById("custom-video-player");
 const audio = document.getElementById("audio");
 
 const player = document.querySelector(".media-player");
 const splash = document.querySelector(".splash");
+
+const playPauseImg = document.getElementById("play-pause-img");
+const rewindBackBtn = document.getElementById("rewind-back-btn");
+const rewindForwardBtn = document.getElementById("rewind-forward-btn");
+
+
+// =========================
+// AUDIO ANALYSIS VARIABLES
+// =========================
 
 let audioContext;
 let analyser;
@@ -12,37 +25,80 @@ let previousBass = 0;
 let lastBeatTime = 0;
 
 
+// =========================
+// PLAY / PAUSE
+// =========================
+
 function togglePlayPause() {
+
+  console.log("PLAY BUTTON CLICKED");
 
   if (video.paused) {
 
-    video.play();
+    // Play video
+    video.play().catch(function(error) {
+      console.log("Video error:", error);
+    });
 
+
+    // Restart music from beginning
     audio.currentTime = 0;
 
+
+    // Play music
     audio.play().catch(function(error) {
       console.log("Audio error:", error);
     });
 
+
+    // Start audio analysis
     startAudioAnalysis();
 
+
+    // Add playing effects
     video.classList.add("playing");
     player.classList.add("playing");
 
+
+    // Change icon to pause
+    if (playPauseImg) {
+      playPauseImg.src = "image/pause.svg";
+      playPauseImg.alt = "Pause";
+    }
+
   } else {
 
+    // Pause video
     video.pause();
+
+    // Pause music
     audio.pause();
 
+
+    // Remove playing effects
     video.classList.remove("playing");
     player.classList.remove("playing");
+
+
+    // Change icon back to play
+    if (playPauseImg) {
+      playPauseImg.src = "image/play.svg";
+      playPauseImg.alt = "Play";
+    }
 
   }
 
 }
 
 
+// =========================
+// START AUDIO ANALYSIS
+// =========================
+
 function startAudioAnalysis() {
+
+  console.log("Starting audio analysis");
+
 
   if (!audioContext) {
 
@@ -52,6 +108,7 @@ function startAudioAnalysis() {
 
     analyser.fftSize = 256;
 
+
     source = audioContext.createMediaElementSource(audio);
 
     source.connect(analyser);
@@ -60,57 +117,92 @@ function startAudioAnalysis() {
 
   }
 
+
+  // Resume AudioContext if browser suspended it
+
   if (audioContext.state === "suspended") {
+
     audioContext.resume();
+
   }
 
+
   analyseMusic();
+
 }
 
 
+// =========================
+// ANALYSE MUSIC
+// =========================
+
 function analyseMusic() {
+
+  // Stop analysing when video is paused
 
   if (video.paused) {
     return;
   }
 
-  const data = new Uint8Array(analyser.frequencyBinCount);
+
+  const data =
+    new Uint8Array(analyser.frequencyBinCount);
+
 
   analyser.getByteFrequencyData(data);
 
 
-  // Overall music intensity
+  // =========================
+  // OVERALL MUSIC STRENGTH
+  // =========================
 
   let total = 0;
 
   for (let i = 0; i < data.length; i++) {
+
     total += data[i];
+
   }
 
-  const average = total / data.length;
+
+  const average =
+    total / data.length;
 
 
-  // Music strength: 0 - 1
-
-  const beatStrength = average / 255;
-
-  player.style.setProperty("--beat-strength", beatStrength);
+  const beatStrength =
+    average / 255;
 
 
-  // Look at low frequencies (bass / kick)
+  player.style.setProperty(
+    "--beat-strength",
+    beatStrength
+  );
+
+
+  // =========================
+  // BASS DETECTION
+  // =========================
 
   let bassTotal = 0;
 
+
   for (let i = 0; i < 10; i++) {
+
     bassTotal += data[i];
+
   }
 
-  const bass = bassTotal / 10;
+
+  const bass =
+    bassTotal / 10;
 
 
-  // Detect a sudden increase in bass
+  // =========================
+  // BEAT DETECTION
+  // =========================
 
-  const now = performance.now();
+  const now =
+    performance.now();
 
 
   if (
@@ -121,31 +213,52 @@ function analyseMusic() {
 
     console.log("💥 BEAT!", bass);
 
-    lastBeatTime = now;
+
+    lastBeatTime =
+      now;
 
 
-    // Decide how many liquid particles to create
+    // =========================
+    // PARTICLE COUNT
+    // =========================
 
-    const particleCount = Math.max(
-      2,
-      Math.floor((bass / 255) * 16)
-    );
+    const particleCount =
+      Math.max(
+        2,
+        Math.floor((bass / 255) * 16)
+      );
 
 
-    // Create particles one after another
+    // =========================
+    // CREATE LIQUID
+    // =========================
 
-    for (let i = 0; i < particleCount; i++) {
+    for (
+      let i = 0;
+      i < particleCount;
+      i++
+    ) {
 
-      setTimeout(() => {
-        spawnLiquid();
-      }, i * 80);
+      setTimeout(
+        function() {
+
+          spawnLiquid();
+
+        },
+        i * 80
+      );
 
     }
 
 
-    // Stronger beat = larger explosion distance
+    // =========================
+    // STRONGER BEAT
+    // = BIGGER EXPLOSION
+    // =========================
 
-    const beatDistance = 1 + (bass / 255) * 1.8;
+    const beatDistance =
+      1 + (bass / 255) * 1.8;
+
 
     player.style.setProperty(
       "--beat-distance",
@@ -155,44 +268,53 @@ function analyseMusic() {
   }
 
 
-  previousBass = bass;
+  previousBass =
+    bass;
 
-  console.log("Beat strength:", beatStrength);
 
-
-  requestAnimationFrame(analyseMusic);
+  requestAnimationFrame(
+    analyseMusic
+  );
 
 }
 
 
-
 // =========================
-// CREATE ONE LIQUID PARTICLE
+// CREATE LIQUID PARTICLE
 // =========================
 
 function spawnLiquid() {
 
-  const liquid = document.createElement("span");
+  const liquid =
+    document.createElement("span");
 
-  liquid.className = "dynamic-liquid";
+
+  liquid.className =
+    "dynamic-liquid";
 
 
   // =========================
   // RANDOM START POSITION
   // =========================
 
-  const startX = (Math.random() - 0.5) * 400;
+  const startX =
+    (Math.random() - 0.5) * 400;
 
-  liquid.style.left = `${startX}px`;
 
-  liquid.style.top = "-300px";
+  liquid.style.left =
+    `${startX}px`;
+
+
+  liquid.style.top =
+    "-300px";
 
 
   // =========================
-  // RANDOM PURPLE / PINK COLOR
+  // RANDOM COLORS
   // =========================
 
   const colors = [
+
     "#a855f7",
     "#ff2bd6",
     "#c026d3",
@@ -200,60 +322,80 @@ function spawnLiquid() {
     "#ec4899",
     "#8b5cf6",
     "#d946ef"
+
   ];
 
+
   const color =
-    colors[Math.floor(Math.random() * colors.length)];
+    colors[
+      Math.floor(
+        Math.random() * colors.length
+      )
+    ];
 
-  liquid.style.background = color;
 
-  liquid.style.color = color;
+  liquid.style.background =
+    color;
+
+
+  liquid.style.color =
+    color;
 
 
   // =========================
-  // GET BEAT STRENGTH
+  // GET BEAT DISTANCE
   // =========================
 
   const beatDistance =
     parseFloat(
       getComputedStyle(player)
-        .getPropertyValue("--beat-distance")
+        .getPropertyValue(
+          "--beat-distance"
+        )
     ) || 1;
 
 
   // =========================
-  // RANDOM EXPLOSION DIRECTION
+  // RANDOM DIRECTION
   // =========================
 
   const angle =
-    Math.random() * Math.PI * 2;
+    Math.random() *
+    Math.PI *
+    2;
 
 
   // =========================
-  // EXPLOSION DISTANCE
-  // STRONGER BEAT = FARTHER
+  // RANDOM DISTANCE
   // =========================
 
   const distance =
-    (120 + Math.random() * 160) * beatDistance;
+    (
+      120 +
+      Math.random() * 160
+    ) *
+    beatDistance;
 
 
   const burstX =
-    Math.cos(angle) * distance;
+    Math.cos(angle) *
+    distance;
 
 
   const burstY =
-    Math.sin(angle) * distance;
+    Math.sin(angle) *
+    distance;
 
 
   // =========================
-  // GIVE PARTICLE ITS DIRECTION
+  // SET DIRECTION
   // =========================
 
   liquid.style.setProperty(
     "--burst-x",
     `${burstX}px`
   );
+
 
   liquid.style.setProperty(
     "--burst-y",
@@ -262,30 +404,139 @@ function spawnLiquid() {
 
 
   // =========================
-  // ADD PARTICLE
+  // ADD TO SPLASH
   // =========================
 
-  splash.appendChild(liquid);
-
-
-  // =========================
-  // START FALLING
-  // =========================
-
-  requestAnimationFrame(() => {
-
-    liquid.classList.add("falling");
-
-  });
+  splash.appendChild(
+    liquid
+  );
 
 
   // =========================
-  // REMOVE AFTER ANIMATION
+  // START ANIMATION
   // =========================
 
-  setTimeout(() => {
+  requestAnimationFrame(
+    function() {
 
-    liquid.remove();
+      liquid.classList.add(
+        "falling"
+      );
 
-  }, 1600);
+    }
+  );
+
+
+  // =========================
+  // REMOVE PARTICLE
+  // =========================
+
+  setTimeout(
+    function() {
+
+      liquid.remove();
+
+    },
+    1600
+  );
+
 }
+
+
+// =========================
+// REWIND BACK
+// -10 SECONDS
+// =========================
+
+if (rewindBackBtn) {
+
+  rewindBackBtn.addEventListener(
+    "click",
+    function() {
+
+      video.currentTime =
+        Math.max(
+          0,
+          video.currentTime - 10
+        );
+
+
+      audio.currentTime =
+        Math.max(
+          0,
+          audio.currentTime - 10
+        );
+
+    }
+  );
+
+}
+
+
+// =========================
+// REWIND FORWARD
+// +10 SECONDS
+// =========================
+
+if (rewindForwardBtn) {
+
+  rewindForwardBtn.addEventListener(
+    "click",
+    function() {
+
+      video.currentTime =
+        Math.min(
+          video.duration || Infinity,
+          video.currentTime + 10
+        );
+
+
+      audio.currentTime =
+        Math.min(
+          audio.duration || Infinity,
+          audio.currentTime + 10
+        );
+
+    }
+  );
+
+}
+
+
+// =========================
+// VIDEO TABS
+// =========================
+
+const videoTabs =
+  document.querySelectorAll(
+    ".video-tab"
+  );
+
+
+videoTabs.forEach(
+  function(tab) {
+
+    tab.addEventListener(
+      "click",
+      function() {
+
+        videoTabs.forEach(
+          function(t) {
+
+            t.classList.remove(
+              "active"
+            );
+
+          }
+        );
+
+
+        tab.classList.add(
+          "active"
+        );
+
+      }
+    );
+
+  }
+);
