@@ -1,100 +1,51 @@
-// =========================
-// GET ELEMENTS
-// =========================
-
 const video = document.getElementById("custom-video-player");
 const audio = document.getElementById("audio");
-
 const player = document.querySelector(".media-player");
 const splash = document.querySelector(".splash");
-
 const playPauseImg = document.getElementById("play-pause-img");
 const rewindBackBtn = document.getElementById("rewind-back-btn");
 const rewindForwardBtn = document.getElementById("rewind-forward-btn");
 
-
-// =========================
-// AUDIO ANALYSIS VARIABLES
-// =========================
-
 let audioContext;
 let analyser;
 let source;
-
-
-// =========================
-// PLAY / PAUSE
-// =========================
+let previousBass = 0;
+let lastBeatTime = 0;
 
 function togglePlayPause() {
 
-  console.log("PLAY BUTTON CLICKED");
+  if (audio.paused) {
 
-  if (video.paused) {
-
-    // Restart video from beginning
     video.currentTime = 0;
-
-    // Restart music from beginning
     audio.currentTime = 0;
 
-    // Play video
-    video.play().catch(function(error) {
-      console.log("Video error:", error);
-    });
+    video.play();
+    audio.play();
 
-    // Play music
-    audio.play().catch(function(error) {
-      console.log("Audio error:", error);
-    });
-
-    // Start audio analysis
     startAudioAnalysis();
 
-    // Add playing effects
-    video.classList.add("playing");
     player.classList.add("playing");
 
-    // Change icon to pause
-    if (playPauseImg) {
-      playPauseImg.src = "image/pause.svg";
-      playPauseImg.alt = "Pause";
-    }
+    playPauseImg.src = "image/pause.svg";
+    playPauseImg.alt = "Pause";
 
   } else {
 
-    // Pause video
     video.pause();
-
-    // Pause music
     audio.pause();
 
-    // Remove playing effects
-    video.classList.remove("playing");
     player.classList.remove("playing");
 
-    // Change icon back to play
-    if (playPauseImg) {
-      playPauseImg.src = "image/play.svg";
-      playPauseImg.alt = "Play";
-    }
-
+    playPauseImg.src = "image/play.svg";
+    playPauseImg.alt = "Play";
   }
-
 }
-
-
-// =========================
-// START AUDIO ANALYSIS
-// =========================
 
 function startAudioAnalysis() {
 
-  console.log("Starting audio analysis");
-
   if (!audioContext) {
 
-    audioContext = new AudioContext();
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
     analyser = audioContext.createAnalyser();
 
@@ -105,90 +56,88 @@ function startAudioAnalysis() {
     source.connect(analyser);
 
     analyser.connect(audioContext.destination);
-
   }
 
-  // Resume AudioContext if browser suspended it
-
   if (audioContext.state === "suspended") {
-
     audioContext.resume();
-
   }
 
   analyseMusic();
-
 }
-
-
-// =========================
-// ANALYSE MUSIC
-// =========================
 
 function analyseMusic() {
 
-  // Stop analysing when video is paused
+  if (!analyser) return;
 
-  if (video.paused) {
-    return;
+  const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+  analyser.getByteFrequencyData(dataArray);
+
+  let sum = 0;
+
+  for (let i = 0; i < dataArray.length; i++) {
+    sum += dataArray[i];
   }
 
-  const data =
-    new Uint8Array(analyser.frequencyBinCount);
+  const average = sum / dataArray.length;
 
-  analyser.getByteFrequencyData(data);
+  const bassRange = Math.floor(dataArray.length * 0.15);
 
+  let bass = 0;
 
-  // =========================
-  // OVERALL MUSIC STRENGTH
-  // =========================
-
-  let total = 0;
-
-  for (let i = 0; i < data.length; i++) {
-
-    total += data[i];
-
+  for (let i = 0; i < bassRange; i++) {
+    bass += dataArray[i];
   }
 
-  const average =
-    total / data.length;
-
-  const beatStrength =
-    average / 255;
+  bass = bass / bassRange;
 
   player.style.setProperty(
     "--beat-strength",
-    beatStrength
+    Math.min(average / 120, 2)
   );
 
+  const now = performance.now();
 
-  // Continue analysing music
-  // but DO NOT create liquid from the beat
+  if (
+    bass > 40 &&
+    bass > previousBass * 1.3 &&
+    now - lastBeatTime > 200
+  ) {
 
-  requestAnimationFrame(
-    analyseMusic
-  );
+    console.log("💥 BEAT!", bass);
 
+    lastBeatTime = now;
+
+    const particleCount =
+      Math.max(2, Math.floor((bass / 255) * 16));
+
+    for (let i = 0; i < particleCount; i++) {
+
+      setTimeout(function () {
+        spawnLiquid();
+      }, i * 80);
+
+    }
+
+    const beatDistance =
+      1 + (bass / 255) * 1.8;
+
+    player.style.setProperty(
+      "--beat-distance",
+      beatDistance
+    );
+  }
+
+  previousBass = bass;
+
+  requestAnimationFrame(analyseMusic);
 }
 
+function spawnLiquid() {
 
-// =========================
-// CREATE LIQUID PARTICLE
-// =========================
+  const liquid = document.createElement("span");
 
-function spawnLiquid(speed = 1) {
-
-  const liquid =
-    document.createElement("span");
-
-  liquid.className =
-    "dynamic-liquid";
-
-
-  // =========================
-  // RANDOM START POSITION
-  // =========================
+  liquid.classList.add("dynamic-liquid");
 
   const startX =
     (Math.random() - 0.5) * 400;
@@ -196,81 +145,41 @@ function spawnLiquid(speed = 1) {
   liquid.style.left =
     `${startX}px`;
 
-  liquid.style.top =
-    "-300px";
-
-
-  // =========================
-  // RANDOM COLORS
-  // =========================
+  liquid.style.top = "-300px";
 
   const colors = [
-
-    "#a855f7",
     "#ff2bd6",
+    "#a855f7",
+    "#ff4de1",
     "#c026d3",
-    "#e879f9",
-    "#ec4899",
-    "#8b5cf6",
     "#d946ef"
-
   ];
 
   const color =
-    colors[
-      Math.floor(
-        Math.random() * colors.length
-      )
-    ];
+    colors[Math.floor(Math.random() * colors.length)];
 
-  liquid.style.background =
-    color;
+  liquid.style.background = color;
 
-  liquid.style.color =
-    color;
+  liquid.style.color = color;
 
-
-  // =========================
-  // SPEED STRENGTH
-  // =========================
-
-  const speedStrength =
-    Math.min(speed / 10, 3);
-
-
-  // =========================
-  // RANDOM DIRECTION
-  // =========================
+  const beatDistance =
+    parseFloat(
+      getComputedStyle(player)
+        .getPropertyValue("--beat-distance")
+    ) || 1;
 
   const angle =
-    Math.random() *
-    Math.PI *
-    2;
-
-
-  // =========================
-  // DISTANCE BASED ON
-  // SCRATCH SPEED
-  // =========================
+    Math.random() * Math.PI * 2;
 
   const distance =
-    80 +
-    Math.random() * 120 +
-    speedStrength * 80;
-
+    (100 + Math.random() * 140) *
+    beatDistance;
 
   const burstX =
-    Math.cos(angle) *
-    distance;
+    Math.cos(angle) * distance;
 
   const burstY =
-    Math.sin(angle) *
-    distance;
-
-
-  // =========================
-  // SET DIRECTION
-  // =========================
+    Math.sin(angle) * distance;
 
   liquid.style.setProperty(
     "--burst-x",
@@ -282,157 +191,69 @@ function spawnLiquid(speed = 1) {
     `${burstY}px`
   );
 
+  splash.appendChild(liquid);
 
-  // =========================
-  // SPEED BASED SIZE
-  // =========================
+  liquid.classList.add("falling");
 
-  const size =
-    0.7 +
-    Math.min(speed / 15, 0.8);
+  setTimeout(function () {
+    liquid.remove();
+  }, 1600);
+}
 
-  liquid.style.transform =
-    `translate(0, 0) scale(${size})`;
+rewindBackBtn.addEventListener(
+  "click",
+  function () {
 
-
-  // =========================
-  // ADD TO SPLASH
-  // =========================
-
-  splash.appendChild(
-    liquid
-  );
-
-
-  // =========================
-  // START ANIMATION
-  // =========================
-
-  requestAnimationFrame(
-    function() {
-
-      liquid.classList.add(
-        "falling"
+    video.currentTime =
+      Math.max(
+        0,
+        video.currentTime - 5
       );
 
-    }
-  );
-
-
-  // =========================
-  // REMOVE PARTICLE
-  // =========================
-
-  setTimeout(
-    function() {
-
-      liquid.remove();
-
-    },
-    1600
-  );
-
-}
-
-
-// =========================
-// REWIND BACK
-// -10 SECONDS
-// =========================
-
-if (rewindBackBtn) {
-
-  rewindBackBtn.addEventListener(
-    "click",
-    function() {
-
-      video.currentTime =
-        Math.max(
-          0,
-          video.currentTime - 10
-        );
-
-      audio.currentTime =
-        Math.max(
-          0,
-          audio.currentTime - 10
-        );
-
-    }
-  );
-
-}
-
-
-// =========================
-// REWIND FORWARD
-// +10 SECONDS
-// =========================
-
-if (rewindForwardBtn) {
-
-  rewindForwardBtn.addEventListener(
-    "click",
-    function() {
-
-      video.currentTime =
-        Math.min(
-          video.duration || Infinity,
-          video.currentTime + 10
-        );
-
-      audio.currentTime =
-        Math.min(
-          audio.duration || Infinity,
-          audio.currentTime + 10
-        );
-
-    }
-  );
-
-}
-
-
-// =========================
-// VIDEO TABS
-// =========================
-
-const videoTabs =
-  document.querySelectorAll(
-    ".video-tab"
-  );
-
-videoTabs.forEach(
-  function(tab) {
-
-    tab.addEventListener(
-      "click",
-      function() {
-
-        videoTabs.forEach(
-          function(t) {
-
-            t.classList.remove(
-              "active"
-            );
-
-          }
-        );
-
-        tab.classList.add(
-          "active"
-        );
-
-      }
-    );
-
+    audio.currentTime =
+      Math.max(
+        0,
+        audio.currentTime - 5
+      );
   }
 );
 
+rewindForwardBtn.addEventListener(
+  "click",
+  function () {
 
-// =========================
-// LIKE BUTTON
-// =========================
+    video.currentTime =
+      Math.min(
+        video.duration,
+        video.currentTime + 5
+      );
+
+    audio.currentTime =
+      Math.min(
+        audio.duration,
+        audio.currentTime + 5
+      );
+  }
+);
+
+const videoTabs =
+  document.querySelectorAll(".video-tabs a");
+
+videoTabs.forEach(function (tab) {
+
+  tab.addEventListener(
+    "click",
+    function () {
+
+      videoTabs.forEach(function (item) {
+        item.classList.remove("active");
+      });
+
+      tab.classList.add("active");
+    }
+  );
+
+});
 
 const likeBtn =
   document.getElementById("like-btn");
@@ -444,34 +265,20 @@ let likes = 0;
 
 likeBtn.addEventListener(
   "click",
-  function() {
+  function () {
 
     likes++;
 
-    likeCount.textContent =
-      likes;
-
+    likeCount.textContent = likes;
   }
 );
-
-
-// =========================
-// VINYL DISC
-// =========================
 
 const disc =
   document.querySelector(".disc");
 
 let isDraggingDisc = false;
-
 let lastMouseX = 0;
-
 let discRotation = 0;
-
-
-// =========================
-// SCRATCH AUDIO
-// =========================
 
 let scratchAudioContext;
 let scratchSource;
@@ -480,123 +287,44 @@ let scratchFilter;
 let scratchOscillator;
 let scratchOscGain;
 
-
-// =========================
-// START DISC DRAG
-// =========================
-
 disc.addEventListener(
   "mousedown",
-  function(event) {
+  function (event) {
 
     isDraggingDisc = true;
 
-    lastMouseX =
-      event.clientX;
-
+    lastMouseX = event.clientX;
   }
 );
 
-
-// =========================
-// DISC MOVEMENT
-// =========================
-
 document.addEventListener(
   "mousemove",
-  function(event) {
+  function (event) {
 
     if (!isDraggingDisc) return;
 
-
-    // =========================
-    // CALCULATE MOVEMENT
-    // =========================
-
     const movement =
-      event.clientX -
-      lastMouseX;
+      event.clientX - lastMouseX;
 
-    const speed =
-      Math.abs(movement);
-
-
-    // =========================
-    // ROTATE DISC
-    // =========================
-
-    discRotation +=
-      movement * 2;
+    discRotation += movement * 2;
 
     disc.style.transform =
       `rotate(${discRotation}deg)`;
 
-
-    // =========================
-    // SCRATCH SOUND
-    // =========================
-
     playScratchSound(
-      speed
+      Math.abs(movement)
     );
-
-
-    // =========================
-    // CREATE LIQUID
-    // BASED ON SCRATCH SPEED
-    // =========================
-
-    if (speed > 1) {
-
-      const particleCount =
-        Math.min(
-          1 +
-          Math.floor(speed / 5),
-          8
-        );
-
-
-      for (
-        let i = 0;
-        i < particleCount;
-        i++
-      ) {
-
-        setTimeout(
-          function() {
-
-            spawnLiquid(
-              speed
-            );
-
-          },
-          i * 30
-        );
-
-      }
-
-    }
-
 
     lastMouseX =
       event.clientX;
-
   }
 );
 
-
-// =========================
-// STOP DISC DRAG
-// =========================
-
 document.addEventListener(
   "mouseup",
-  function() {
+  function () {
 
     isDraggingDisc = false;
-
-
-    // Stop scratch sound
 
     if (
       scratchGain &&
@@ -608,42 +336,31 @@ document.addEventListener(
         scratchAudioContext.currentTime,
         0.02
       );
-
     }
-
   }
 );
-
-
-// =========================
-// SCRATCH SOUND
-// =========================
 
 function playScratchSound(speed) {
 
   if (!scratchAudioContext) {
 
     scratchAudioContext =
-      new AudioContext();
-
-
-    // =========================
-    // MAIN SCRATCH NOISE
-    // =========================
-
-    scratchSource =
-      scratchAudioContext
-        .createBufferSource();
+      new (
+        window.AudioContext ||
+        window.webkitAudioContext
+      )();
 
     scratchGain =
-      scratchAudioContext
-        .createGain();
+      scratchAudioContext.createGain();
 
+    scratchFilter =
+      scratchAudioContext.createBiquadFilter();
+
+    scratchOscGain =
+      scratchAudioContext.createGain();
 
     const bufferSize =
-      scratchAudioContext.sampleRate *
-      2;
-
+      scratchAudioContext.sampleRate * 2;
 
     const buffer =
       scratchAudioContext.createBuffer(
@@ -652,10 +369,8 @@ function playScratchSound(speed) {
         scratchAudioContext.sampleRate
       );
 
-
     const data =
       buffer.getChannelData(0);
-
 
     for (
       let i = 0;
@@ -665,29 +380,17 @@ function playScratchSound(speed) {
 
       data[i] =
         Math.random() * 2 - 1;
-
     }
 
+    scratchSource =
+      scratchAudioContext.createBufferSource();
 
-    scratchSource.buffer =
-      buffer;
+    scratchSource.buffer = buffer;
 
-    scratchSource.loop =
-      true;
-
-
-    // High frequency scratch
-
-    scratchFilter =
-      scratchAudioContext
-        .createBiquadFilter();
+    scratchSource.loop = true;
 
     scratchFilter.type =
-      "highpass";
-
-    scratchFilter.frequency.value =
-      2200;
-
+      "bandpass";
 
     scratchSource.connect(
       scratchFilter
@@ -701,37 +404,18 @@ function playScratchSound(speed) {
       scratchAudioContext.destination
     );
 
-
-    scratchGain.gain.value =
-      0.001;
-
+    scratchGain.gain.value = 0;
 
     scratchSource.start();
 
-
-    // =========================
-    // SHARP SCRATCH TONE
-    // =========================
-
     scratchOscillator =
-      scratchAudioContext
-        .createOscillator();
-
-    scratchOscGain =
-      scratchAudioContext
-        .createGain();
-
+      scratchAudioContext.createOscillator();
 
     scratchOscillator.type =
       "sawtooth";
 
-    scratchOscillator.frequency.value =
-      900;
-
-
     scratchOscGain.gain.value =
-      0.001;
-
+      0;
 
     scratchOscillator.connect(
       scratchOscGain
@@ -742,9 +426,7 @@ function playScratchSound(speed) {
     );
 
     scratchOscillator.start();
-
   }
-
 
   if (
     scratchAudioContext.state ===
@@ -752,60 +434,41 @@ function playScratchSound(speed) {
   ) {
 
     scratchAudioContext.resume();
-
   }
-
-
-  // Faster movement = louder scratch
 
   const volume =
     Math.min(
-      speed / 7,
-      0.65
+      speed / 30,
+      0.35
     );
 
+  const frequency =
+    300 + speed * 35;
 
   scratchGain.gain.setTargetAtTime(
     volume,
     scratchAudioContext.currentTime,
-    0.003
+    0.01
   );
 
+  scratchFilter.frequency.setTargetAtTime(
+    800 + speed * 100,
+    scratchAudioContext.currentTime,
+    0.01
+  );
 
-  // Faster movement = higher pitch
+  scratchOscillator.frequency.setTargetAtTime(
+    frequency,
+    scratchAudioContext.currentTime,
+    0.01
+  );
 
-  const pitch =
-    700 +
-    Math.min(
-      speed * 120,
-      2200
-    );
-
-
-  scratchOscillator.frequency
-    .setTargetAtTime(
-      pitch,
-      scratchAudioContext.currentTime,
-      0.003
-    );
-
-
-  scratchOscGain.gain
-    .setTargetAtTime(
-      Math.min(
-        speed / 20,
-        0.22
-      ),
-      scratchAudioContext.currentTime,
-      0.003
-    );
-
+  scratchOscGain.gain.setTargetAtTime(
+    volume * 0.25,
+    scratchAudioContext.currentTime,
+    0.01
+  );
 }
-
-
-// =========================
-// FULLSCREEN
-// =========================
 
 const fullscreenBtn =
   document.getElementById(
@@ -817,10 +480,9 @@ const videoPlayer =
     "custom-video-player"
   );
 
-
 fullscreenBtn.addEventListener(
   "click",
-  function() {
+  function () {
 
     if (!document.fullscreenElement) {
 
@@ -829,35 +491,22 @@ fullscreenBtn.addEventListener(
     } else {
 
       document.exitFullscreen();
-
     }
-
   }
 );
 
-
-// =========================
-// MUTE / UNMUTE
-// =========================
-
 const muteBtn =
-  document.getElementById(
-    "mute-btn"
-  );
+  document.getElementById("mute-btn");
 
 const muteImg =
-  document.getElementById(
-    "mute-img"
-  );
-
+  document.getElementById("mute-img");
 
 muteBtn.addEventListener(
   "click",
-  function() {
+  function () {
 
     audio.muted =
       !audio.muted;
-
 
     if (audio.muted) {
 
@@ -874,8 +523,6 @@ muteBtn.addEventListener(
 
       muteImg.alt =
         "Mute";
-
     }
-
   }
 );
