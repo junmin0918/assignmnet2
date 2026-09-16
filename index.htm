@@ -27,6 +27,9 @@
 
     <div class="media-player">
 
+      <!-- Mouse particle canvas -->
+      <canvas id="mouse-particles"></canvas>
+
       <div class="disc">
         <div class="disc-center"></div>
       </div>
@@ -92,6 +95,10 @@
 
         </div>
 
+        <!-- =========================
+             REWIND BUTTONS
+             ========================= -->
+
         <div class="rewind-controls">
 
           <button id="rewind-back-btn">
@@ -110,32 +117,48 @@
 
         </div>
 
+        <!-- =========================
+             FULLSCREEN
+             ========================= -->
+
         <button id="fullscreen-btn">
+
           <img
             src="image/fullscreen.svg"
             alt="Fullscreen"
           >
+
         </button>
 
+        <!-- =========================
+             MUTE
+             ========================= -->
+
         <button id="mute-btn">
+
           <img
             id="mute-img"
             src="image/sound.svg"
             alt="Sound"
           >
+
         </button>
 
-        <div class="playlist-like-container">
+        <!-- =========================
+             LIKE
+             ========================= -->
 
-          <!-- LIKE -->
+        <div class="playlist-like-container">
 
           <div class="like-section">
 
             <button id="like-btn">
+
               <img
                 src="image/skull.jpg"
                 alt="Like"
               >
+
             </button>
 
             <span id="like-count">0</span>
@@ -144,15 +167,15 @@
 
         </div>
 
+        <!-- =========================
+             PROGRESS BAR
+             ========================= -->
+
         <div class="progress-bar">
           <span id="progress-bar-fill"></span>
         </div>
 
       </div>
-
-      <!-- =========================
-           ADDITIONAL CONTENT
-           ========================= -->
 
       <section>
 
