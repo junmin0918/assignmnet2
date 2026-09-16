@@ -471,16 +471,13 @@ function playScratchSound(speed) {
       )();
 
     scratchGain =
-      scratchAudioContext
-        .createGain();
+      scratchAudioContext.createGain();
 
     scratchFilter =
-      scratchAudioContext
-        .createBiquadFilter();
+      scratchAudioContext.createBiquadFilter();
 
     scratchOscGain =
-      scratchAudioContext
-        .createGain();
+      scratchAudioContext.createGain();
 
 
     const bufferSize =
@@ -511,8 +508,7 @@ function playScratchSound(speed) {
 
 
     scratchSource =
-      scratchAudioContext
-        .createBufferSource();
+      scratchAudioContext.createBufferSource();
 
     scratchSource.buffer =
       buffer;
@@ -546,12 +542,14 @@ function playScratchSound(speed) {
 
 
     scratchOscillator =
-      scratchAudioContext
-        .createOscillator();
+      scratchAudioContext.createOscillator();
 
     scratchOscillator.type =
       "sawtooth";
 
+
+    scratchOscGain =
+      scratchAudioContext.createGain();
 
     scratchOscGain.gain.value =
       0;
@@ -579,44 +577,69 @@ function playScratchSound(speed) {
   }
 
 
-  const volume =
-    Math.min(
-      speed / 30,
-      0.35
-    );
+  // ====================================
+  // SPEED → SCRATCH INTENSITY
+  // ====================================
 
+  const intensity =
+    Math.min(speed / 12, 1);
+
+
+  // ====================================
+  // VOLUME
+  // 越快越大声
+  // ====================================
+
+  const volume =
+    0.08 +
+    intensity * 0.45;
+
+
+  // ====================================
+  // FREQUENCY
+  // 越快越尖锐
+  // ====================================
 
   const frequency =
-    300 +
-    speed * 35;
+    500 +
+    intensity * 3500;
+
+
+  // ====================================
+  // FILTER
+  // 越快，高频越明显
+  // ====================================
+
+  const filterFrequency =
+    1000 +
+    intensity * 7000;
 
 
   scratchGain.gain.setTargetAtTime(
     volume,
     scratchAudioContext.currentTime,
-    0.01
+    0.008
   );
 
 
   scratchFilter.frequency.setTargetAtTime(
-    800 +
-      speed * 100,
+    filterFrequency,
     scratchAudioContext.currentTime,
-    0.01
+    0.008
   );
 
 
   scratchOscillator.frequency.setTargetAtTime(
     frequency,
     scratchAudioContext.currentTime,
-    0.01
+    0.008
   );
 
 
   scratchOscGain.gain.setTargetAtTime(
-    volume * 0.25,
+    volume * 0.35,
     scratchAudioContext.currentTime,
-    0.01
+    0.008
   );
 }
 
