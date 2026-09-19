@@ -957,3 +957,111 @@ function drawMouseParticles() {
 
 
 drawMouseParticles();
+
+const playlistButton =
+  document.querySelector(
+    'a[href="playlist.html"]'
+  );
+
+
+// ========================================
+// CHANGE YOUR FILE NAMES HERE
+// ========================================
+
+const playlist = [
+
+  {
+    video: "video/sphere.mp4",
+    audio: "audio/montagem.mp3"
+  },
+
+  {
+    video: "video/wave.mp4",
+    audio: "audio/beat.mp3"
+  },
+
+  {
+    video: "video/wave2.mp4",
+    audio: "audio/dj.mp3"
+  }
+
+];
+
+
+// Current playlist number
+
+let currentPlaylist = 0;
+
+
+// ========================================
+// CLICK PLAYLIST
+// ========================================
+
+playlistButton.addEventListener(
+  "click",
+  function (event) {
+
+    event.preventDefault();
+
+
+    // Go to next playlist
+
+    currentPlaylist++;
+
+    
+    // Go back to first playlist
+    // when reaching the end
+
+    if (
+      currentPlaylist >= playlist.length
+    ) {
+
+      currentPlaylist = 0;
+    }
+
+
+    const selectedPlaylist =
+      playlist[currentPlaylist];
+
+
+    // ====================================
+    // CHANGE VIDEO
+    // ====================================
+
+    video.src =
+      selectedPlaylist.video;
+
+
+    // ====================================
+    // CHANGE AUDIO
+    // ====================================
+
+    audio.src =
+      selectedPlaylist.audio;
+
+
+    // ====================================
+    // RESET PLAYBACK
+    // ====================================
+
+    video.currentTime = 0;
+    audio.currentTime = 0;
+
+
+    // ====================================
+    // UPDATE BUTTON
+    // ====================================
+
+    playPauseImg.src =
+      "image/play.svg";
+
+    playPauseImg.alt =
+      "Play";
+
+
+    player.classList.remove(
+      "playing"
+    );
+
+  }
+);
