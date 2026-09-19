@@ -958,6 +958,11 @@ function drawMouseParticles() {
 
 drawMouseParticles();
 
+
+// ========================================
+// PLAYLIST
+// ========================================
+
 const playlistButton =
   document.querySelector(
     'a[href="playlist.html"]'
@@ -978,11 +983,6 @@ const playlist = [
   {
     video: "video/wave.mp4",
     audio: "audio/beat.mp3"
-  },
-
-  {
-    video: "video/wave2.mp4",
-    audio: "audio/dj.mp3"
   }
 
 ];
@@ -1008,7 +1008,7 @@ playlistButton.addEventListener(
 
     currentPlaylist++;
 
-    
+
     // Go back to first playlist
     // when reaching the end
 
@@ -1041,6 +1041,14 @@ playlistButton.addEventListener(
 
 
     // ====================================
+    // RELOAD VIDEO + AUDIO
+    // ====================================
+
+    video.load();
+    audio.load();
+
+
+    // ====================================
     // RESET PLAYBACK
     // ====================================
 
@@ -1058,6 +1066,49 @@ playlistButton.addEventListener(
     playPauseImg.alt =
       "Play";
 
+
+    player.classList.remove(
+      "playing"
+    );
+
+  }
+);
+
+
+// ========================================
+// CLICK HOME
+// ========================================
+
+homeButton.addEventListener(
+  "click",
+  function (event) {
+
+    event.preventDefault();
+
+
+    // Show HOME introduction
+
+    player.classList.add(
+      "home-view"
+    );
+
+
+    // Stop music and video
+
+    video.pause();
+    audio.pause();
+
+
+    // Reset play button
+
+    playPauseImg.src =
+      "image/play.svg";
+
+    playPauseImg.alt =
+      "Play";
+
+
+    // Remove playing animation
 
     player.classList.remove(
       "playing"

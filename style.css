@@ -667,3 +667,210 @@ footer a:hover {
     0 0 8px #ff2bd6,
     0 0 20px #a855f7;
 }
+
+
+/* ========================================
+   HOME INTRO
+======================================== */
+
+.home-intro {
+  display: none;
+
+  width: 100%;
+  height: 600px;
+
+  box-sizing: border-box;
+
+  border: 3px solid #ff2bd6;
+  border-radius: 10px;
+
+  background:
+    radial-gradient(
+      circle at 20% 20%,
+      rgba(168, 85, 247, 0.25),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      rgba(255, 43, 214, 0.20),
+      transparent 35%
+    ),
+    #12001f;
+
+  box-shadow:
+    0 0 5px #ff2bd6,
+    0 0 15px #ff2bd6,
+    0 0 30px #ff2bd6,
+    0 0 55px #a855f7,
+    0 0 90px rgba(168, 85, 247, 0.5);
+
+  overflow-y: auto;
+
+  position: relative;
+
+  z-index: 6;
+}
+
+
+.home-intro-content {
+  width: 85%;
+  max-width: 850px;
+
+  margin: 0 auto;
+
+  padding: 35px 0 40px;
+}
+
+
+.home-intro h2 {
+  margin: 0 0 30px;
+
+  text-align: center;
+
+  color: white;
+
+  font-size: 30px;
+  font-weight: bold;
+
+  letter-spacing: 5px;
+
+  text-shadow:
+    0 0 5px #ff2bd6,
+    0 0 15px #ff2bd6,
+    0 0 30px #a855f7;
+}
+
+
+.intro-section {
+  margin-bottom: 20px;
+
+  padding: 16px 22px;
+
+  background:
+    rgba(255, 0, 255, 0.06);
+
+  border-left: 3px solid #ff2bd6;
+
+  border-radius: 5px;
+
+  box-shadow:
+    0 0 12px
+      rgba(168, 85, 247, 0.18);
+}
+
+
+.intro-section h3 {
+  margin: 0 0 8px;
+
+  color: #ff2bd6;
+
+  font-size: 17px;
+
+  letter-spacing: 2px;
+
+  text-shadow:
+    0 0 8px #ff2bd6;
+}
+
+
+.intro-section p {
+  margin: 6px 0;
+
+  color:
+    rgba(255, 255, 255, 0.88);
+
+  font-size: 14px;
+
+  line-height: 1.6;
+
+  letter-spacing: 0.3px;
+}
+
+
+/* ========================================
+   HOME VIEW
+======================================== */
+
+.media-player.home-view
+#custom-video-player {
+  display: none;
+}
+
+
+.media-player.home-view
+.home-intro {
+  display: block;
+}
+
+
+/* Hide player controls while HOME is open */
+
+.media-player.home-view .disc,
+.media-player.home-view #mouse-particles,
+.media-player.home-view .splash,
+.media-player.home-view .custom-controls,
+.media-player.home-view .rewind-controls,
+.media-player.home-view #fullscreen-btn,
+.media-player.home-view #mute-btn,
+.media-player.home-view .playlist-like-container,
+.media-player.home-view .progress-bar {
+  display: none;
+}
+
+
+/* ========================================
+   HOME SCROLLBAR
+======================================== */
+
+.home-intro::-webkit-scrollbar {
+  width: 7px;
+}
+
+.home-intro::-webkit-scrollbar-track {
+  background:
+    rgba(255, 255, 255, 0.05);
+}
+
+.home-intro::-webkit-scrollbar-thumb {
+  background: #ff2bd6;
+
+  border-radius: 10px;
+
+  box-shadow:
+    0 0 10px #ff2bd6;
+}
+
+
+/* ========================================
+   HOME RESPONSIVE
+======================================== */
+
+@media (max-width: 700px) {
+
+  .home-intro {
+    height: 600px;
+  }
+
+  .home-intro-content {
+    width: 88%;
+    padding: 25px 0 30px;
+  }
+
+  .home-intro h2 {
+    font-size: 23px;
+    letter-spacing: 3px;
+  }
+
+  .intro-section {
+    padding: 14px 16px;
+  }
+
+  .intro-section h3 {
+    font-size: 15px;
+  }
+
+  .intro-section p {
+    font-size: 13px;
+  }
+
+}
