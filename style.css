@@ -72,14 +72,14 @@ header h1 {
 
 .video-tabs li:nth-child(1) {
   position: relative;
-  left: -30px;
-  top: 0px;
+  left: -200px;
+  top: -9px;
 }
 
 .video-tabs li:nth-child(2) {
   position: relative;
-  left: 100px;
-  top: -42px;
+  left: -70px;
+  top: -52px;
 }
 
 .video-tabs a,
@@ -201,7 +201,7 @@ header h1 {
 
 .custom-controls {
   position: absolute;
-  bottom: 80px;
+  bottom: 60px;
   left: 320px;
   width: 100%;
 
@@ -235,7 +235,7 @@ header h1 {
 .rewind-controls {
   position: absolute;
   right: 160px;
-  bottom: 80px;
+  bottom: 60px;
 
   display: flex;
   gap: 15px;
@@ -273,7 +273,7 @@ header h1 {
 .playlist-like-container {
   position: absolute;
   right: 830px;
-  bottom: 70px;
+  bottom: 65px;
 
   display: flex;
   justify-content: center;
@@ -588,15 +588,15 @@ header h1 {
 }
 
 #fullscreen-btn {
-  left: 400px;
-  top: -45px;
+  left: 385px;
+  top: -25px;
 
   z-index: 30;
 }
 
 #mute-btn {
-  left: 265px;
-  top: -45px;
+  left: 245px;
+  top: -25px;
 
   z-index: 30;
 }
@@ -677,7 +677,7 @@ footer a:hover {
   display: none;
 
   width: 100%;
-  height: 600px;
+  height: 900px;
 
   box-sizing: border-box;
 
@@ -873,4 +873,58 @@ footer a:hover {
     font-size: 13px;
   }
 
+}
+/* JUMP BUTTONS */
+
+.jump-btn {
+  position: absolute;
+  bottom: 82px;
+
+  background: none;
+  border: none;
+  padding: 0;
+
+  cursor: pointer;
+  z-index: 25;
+}
+
+.jump-btn img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+
+  filter:
+    drop-shadow(0 0 8px #ff2bd6)
+    drop-shadow(0 0 15px #a855f7);
+
+  transition:
+    transform 0.3s ease,
+    filter 0.3s ease;
+}
+
+/* 1 */
+#jump-15-btn {
+  left: 490px;
+  height: 30px;
+}
+
+/* 2 */
+#jump-30-btn {
+  left: 550px;
+  height: 30px;
+}
+
+/* HOVER */
+.jump-btn:hover img {
+  transform: scale(1.1);
+
+  filter:
+    drop-shadow(0 0 10px #ff2bd6)
+    drop-shadow(0 0 25px #ff2bd6)
+    drop-shadow(0 0 40px #a855f7);
+}
+
+/* CLICK */
+.jump-btn:active img {
+  transform: scale(0.95);
 }

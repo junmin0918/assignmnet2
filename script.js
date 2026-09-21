@@ -6,28 +6,21 @@ const playPauseImg = document.getElementById("play-pause-img");
 const rewindBackBtn = document.getElementById("rewind-back-btn");
 const rewindForwardBtn = document.getElementById("rewind-forward-btn");
 
-
-// ========================================
 // PLAY / PAUSE
-// ========================================
-
 function togglePlayPause() {
-
   if (audio.paused) {
-
     video.currentTime = 0;
     audio.currentTime = 0;
 
     video.play();
     audio.play();
 
+    player.classList.remove("home-view");
     player.classList.add("playing");
 
     playPauseImg.src = "image/pause.svg";
     playPauseImg.alt = "Pause";
-
   } else {
-
     video.pause();
     audio.pause();
 
@@ -39,124 +32,55 @@ function togglePlayPause() {
 }
 
 
-// ========================================
 // REWIND BACK
-// ========================================
-
-rewindBackBtn.addEventListener(
-  "click",
-  function () {
-
-    video.currentTime =
-      Math.max(
-        0,
-        video.currentTime - 5
-      );
-
-    audio.currentTime =
-      Math.max(
-        0,
-        audio.currentTime - 5
-      );
-  }
-);
+rewindBackBtn.addEventListener("click", function () {
+  video.currentTime = Math.max(0, video.currentTime - 5);
+  audio.currentTime = Math.max(0, audio.currentTime - 5);
+});
 
 
-// ========================================
 // REWIND FORWARD
-// ========================================
-
-rewindForwardBtn.addEventListener(
-  "click",
-  function () {
-
-    video.currentTime =
-      Math.min(
-        video.duration,
-        video.currentTime + 5
-      );
-
-    audio.currentTime =
-      Math.min(
-        audio.duration,
-        audio.currentTime + 5
-      );
-  }
-);
+rewindForwardBtn.addEventListener("click", function () {
+  video.currentTime = Math.min(video.duration, video.currentTime + 5);
+  audio.currentTime = Math.min(audio.duration, audio.currentTime + 5);
+});
 
 
-// ========================================
 // VIDEO TABS
-// ========================================
+const videoTabs = document.querySelectorAll(".video-tabs a");
 
-const videoTabs =
-  document.querySelectorAll(
-    ".video-tabs a"
-  );
+videoTabs.forEach(function (tab) {
+  tab.addEventListener("click", function () {
+    videoTabs.forEach(function (item) {
+      item.classList.remove("active");
+    });
 
-videoTabs.forEach(
-  function (tab) {
-
-    tab.addEventListener(
-      "click",
-      function () {
-
-        videoTabs.forEach(
-          function (item) {
-
-            item.classList.remove(
-              "active"
-            );
-          }
-        );
-
-        tab.classList.add("active");
-      }
-    );
-  }
-);
+    tab.classList.add("active");
+  });
+});
 
 
-// ========================================
 // LIKE BUTTON
-// ========================================
-
-const likeBtn =
-  document.getElementById("like-btn");
-
-const likeCount =
-  document.getElementById("like-count");
+const likeBtn = document.getElementById("like-btn");
+const likeCount = document.getElementById("like-count");
 
 let likes = 0;
 
-likeBtn.addEventListener(
-  "click",
-  function () {
-
-    likes++;
-
-    likeCount.textContent =
-      likes;
-  }
-);
+likeBtn.addEventListener("click", function () {
+  likes++;
+  likeCount.textContent = likes;
+});
 
 
-// ========================================
 // DISC
-// ========================================
-
-const disc =
-  document.querySelector(".disc");
+const disc = document.querySelector(".disc");
 
 let isDraggingDisc = false;
 let lastMouseX = 0;
 let discRotation = 0;
 
 
-// ========================================
 // SCRATCH AUDIO
-// ========================================
-
 let scratchAudioContext;
 let scratchSource;
 let scratchGain;
@@ -165,190 +89,96 @@ let scratchOscillator;
 let scratchOscGain;
 
 
-// ========================================
 // START DRAGGING DISC
-// ========================================
-
-disc.addEventListener(
-  "mousedown",
-  function (event) {
-
-    isDraggingDisc = true;
-
-    lastMouseX =
-      event.clientX;
-  }
-);
+disc.addEventListener("mousedown", function (event) {
+  isDraggingDisc = true;
+  lastMouseX = event.clientX;
+});
 
 
-// ========================================
 // DISC MOVEMENT
-// ========================================
+document.addEventListener("mousemove", function (event) {
+  if (!isDraggingDisc) return;
 
-document.addEventListener(
-  "mousemove",
-  function (event) {
+  const movement = event.clientX - lastMouseX;
+  const speed = Math.abs(movement);
 
-    if (!isDraggingDisc) return;
+  discRotation += movement * 2;
 
-    const movement =
-      event.clientX - lastMouseX;
+  disc.style.transform =
+    `rotate(${discRotation}deg)`;
 
-    const speed =
-      Math.abs(movement);
+  playScratchSound(speed);
 
+  if (speed > 1) {
+    let particleCount;
 
-    // Rotate Disc
-    discRotation +=
-      movement * 2;
-
-    disc.style.transform =
-      `rotate(${discRotation}deg)`;
-
-
-    // Scratch sound
-    playScratchSound(speed);
-
-
-    // ====================================
-    // GLITCH VISUAL EFFECT
-    // ====================================
-
-    if (speed > 1) {
-
-      let particleCount;
-
-
-      if (speed < 4) {
-
-        particleCount = 5;
-
-      } else if (speed < 8) {
-
-        particleCount = 12;
-
-      } else {
-
-        particleCount = 20;
-      }
-
-
-      particleCount =
-        Math.min(
-          particleCount,
-          25
-        );
-
-
-      // Create many lines
-      for (
-        let i = 0;
-        i < particleCount;
-        i++
-      ) {
-
-        setTimeout(
-          function () {
-
-            spawnGlitchLine(speed);
-
-          },
-          i * 12
-        );
-      }
+    if (speed < 4) {
+      particleCount = 5;
+    } else if (speed < 8) {
+      particleCount = 12;
+    } else {
+      particleCount = 20;
     }
 
+    particleCount = Math.min(
+      particleCount,
+      25
+    );
 
-    lastMouseX =
-      event.clientX;
+    for (let i = 0; i < particleCount; i++) {
+      setTimeout(function () {
+        spawnGlitchLine(speed);
+      }, i * 12);
+    }
   }
-);
+
+  lastMouseX = event.clientX;
+});
 
 
-// ========================================
 // STOP DRAGGING
-// ========================================
+document.addEventListener("mouseup", function () {
+  isDraggingDisc = false;
 
-document.addEventListener(
-  "mouseup",
-  function () {
+  if (scratchGain && scratchAudioContext) {
+    scratchGain.gain.setTargetAtTime(
+      0,
+      scratchAudioContext.currentTime,
+      0.02
+    );
 
-    isDraggingDisc = false;
-
-    if (
-      scratchGain &&
-      scratchAudioContext
-    ) {
-
-      scratchGain.gain.setTargetAtTime(
-        0,
-        scratchAudioContext.currentTime,
-        0.02
-      );
-
-      scratchOscGain.gain.setTargetAtTime(
-        0,
-        scratchAudioContext.currentTime,
-        0.02
-      );
-    }
+    scratchOscGain.gain.setTargetAtTime(
+      0,
+      scratchAudioContext.currentTime,
+      0.02
+    );
   }
-);
+});
 
 
-// ========================================
 // GLITCH / ELECTRIC LINES
-// ========================================
-
 function spawnGlitchLine(speed) {
+  const line = document.createElement("span");
 
-  const line =
-    document.createElement("span");
-
-  line.classList.add(
-    "glitch-line"
-  );
-
-
-  // ------------------------------------
-  // START FROM CENTER OF PLAYER
-  // ------------------------------------
+  line.classList.add("glitch-line");
 
   line.style.left = "50%";
   line.style.top = "50%";
 
-
-  // ------------------------------------
-  // RANDOM DIRECTION
-  // ------------------------------------
-
   const angle =
-    Math.random() *
-    Math.PI *
-    2;
-
-
-  // ------------------------------------
-  // RANDOM DISTANCE
-  // ------------------------------------
+    Math.random() * Math.PI * 2;
 
   const distance =
     80 +
     Math.random() * 260 +
-    Math.min(
-      speed * 12,
-      180
-    );
-
+    Math.min(speed * 12, 180);
 
   const endX =
-    Math.cos(angle) *
-    distance;
+    Math.cos(angle) * distance;
 
   const endY =
-    Math.sin(angle) *
-    distance;
-
+    Math.sin(angle) * distance;
 
   line.style.setProperty(
     "--glitch-x",
@@ -360,30 +190,17 @@ function spawnGlitchLine(speed) {
     `${endY}px`
   );
 
-
-  // ------------------------------------
-  // RANDOM LINE SIZE
-  // ------------------------------------
-
   const thickness =
-    1 +
-    Math.random() * 4;
+    1 + Math.random() * 4;
 
   line.style.height =
     `${thickness}px`;
 
-
   const length =
-    30 +
-    Math.random() * 130;
+    30 + Math.random() * 130;
 
   line.style.width =
     `${length}px`;
-
-
-  // ------------------------------------
-  // RANDOM COLOUR
-  // ------------------------------------
 
   const colors = [
     "#ff2bd6",
@@ -394,76 +211,42 @@ function spawnGlitchLine(speed) {
     "#d946ef"
   ];
 
-
   const color =
     colors[
       Math.floor(
-        Math.random() *
-        colors.length
+        Math.random() * colors.length
       )
     ];
-
 
   line.style.background =
     color;
 
-
-  line.style.boxShadow =
-    `
+  line.style.boxShadow = `
     0 0 5px ${color},
     0 0 15px ${color},
     0 0 30px ${color}
-    `;
+  `;
 
-
-  // ------------------------------------
-  // RANDOM ROTATION
-  // ------------------------------------
-
-  line.style.transform =
-    `
+  line.style.transform = `
     translate(-50%, -50%)
     rotate(${angle}rad)
-    `;
+  `;
 
-
-  // ------------------------------------
-  // ADD TO SPLASH CONTAINER
-  // ------------------------------------
-
-  splash.appendChild(
-    line
-  );
-
+  splash.appendChild(line);
 
   line.classList.add(
     "glitch-line-active"
   );
 
-
-  // ------------------------------------
-  // REMOVE LINE
-  // ------------------------------------
-
-  setTimeout(
-    function () {
-
-      line.remove();
-
-    },
-    550
-  );
+  setTimeout(function () {
+    line.remove();
+  }, 550);
 }
 
 
-// ========================================
 // SCRATCH SOUND
-// ========================================
-
 function playScratchSound(speed) {
-
   if (!scratchAudioContext) {
-
     scratchAudioContext =
       new (
         window.AudioContext ||
@@ -479,10 +262,8 @@ function playScratchSound(speed) {
     scratchOscGain =
       scratchAudioContext.createGain();
 
-
     const bufferSize =
       scratchAudioContext.sampleRate * 2;
-
 
     const buffer =
       scratchAudioContext.createBuffer(
@@ -491,21 +272,13 @@ function playScratchSound(speed) {
         scratchAudioContext.sampleRate
       );
 
-
     const data =
       buffer.getChannelData(0);
 
-
-    for (
-      let i = 0;
-      i < bufferSize;
-      i++
-    ) {
-
+    for (let i = 0; i < bufferSize; i++) {
       data[i] =
         Math.random() * 2 - 1;
     }
-
 
     scratchSource =
       scratchAudioContext.createBufferSource();
@@ -516,10 +289,8 @@ function playScratchSound(speed) {
     scratchSource.loop =
       true;
 
-
     scratchFilter.type =
       "bandpass";
-
 
     scratchSource.connect(
       scratchFilter
@@ -533,13 +304,10 @@ function playScratchSound(speed) {
       scratchAudioContext.destination
     );
 
-
     scratchGain.gain.value =
       0;
 
-
     scratchSource.start();
-
 
     scratchOscillator =
       scratchAudioContext.createOscillator();
@@ -547,13 +315,11 @@ function playScratchSound(speed) {
     scratchOscillator.type =
       "sawtooth";
 
-
     scratchOscGain =
       scratchAudioContext.createGain();
 
     scratchOscGain.gain.value =
       0;
-
 
     scratchOscillator.connect(
       scratchOscGain
@@ -563,57 +329,30 @@ function playScratchSound(speed) {
       scratchAudioContext.destination
     );
 
-
     scratchOscillator.start();
   }
-
 
   if (
     scratchAudioContext.state ===
     "suspended"
   ) {
-
     scratchAudioContext.resume();
   }
 
-
-  // ====================================
-  // SPEED → SCRATCH INTENSITY
-  // ====================================
-
   const intensity =
     Math.min(speed / 12, 1);
-
-
-  // ====================================
-  // VOLUME
-  // 越快越大声
-  // ====================================
 
   const volume =
     0.08 +
     intensity * 0.45;
 
-
-  // ====================================
-  // FREQUENCY
-  // 越快越尖锐
-  // ====================================
-
   const frequency =
     500 +
     intensity * 3500;
 
-
-  // ====================================
-  // FILTER
-  // 越快，高频越明显
-  // ====================================
-
   const filterFrequency =
     1000 +
     intensity * 7000;
-
 
   scratchGain.gain.setTargetAtTime(
     volume,
@@ -621,20 +360,17 @@ function playScratchSound(speed) {
     0.008
   );
 
-
   scratchFilter.frequency.setTargetAtTime(
     filterFrequency,
     scratchAudioContext.currentTime,
     0.008
   );
 
-
   scratchOscillator.frequency.setTargetAtTime(
     frequency,
     scratchAudioContext.currentTime,
     0.008
   );
-
 
   scratchOscGain.gain.setTargetAtTime(
     volume * 0.35,
@@ -644,10 +380,7 @@ function playScratchSound(speed) {
 }
 
 
-// ========================================
 // FULLSCREEN
-// ========================================
-
 const fullscreenBtn =
   document.getElementById(
     "fullscreen-btn"
@@ -658,29 +391,19 @@ const videoPlayer =
     "custom-video-player"
   );
 
-
 fullscreenBtn.addEventListener(
   "click",
   function () {
-
-    if (
-      !document.fullscreenElement
-    ) {
-
+    if (!document.fullscreenElement) {
       videoPlayer.requestFullscreen();
-
     } else {
-
       document.exitFullscreen();
     }
   }
 );
 
 
-// ========================================
 // MUTE
-// ========================================
-
 const muteBtn =
   document.getElementById(
     "mute-btn"
@@ -691,25 +414,19 @@ const muteImg =
     "mute-img"
   );
 
-
 muteBtn.addEventListener(
   "click",
   function () {
-
     audio.muted =
       !audio.muted;
 
-
     if (audio.muted) {
-
       muteImg.src =
         "image/mute.svg";
 
       muteImg.alt =
         "Unmute";
-
     } else {
-
       muteImg.src =
         "image/sound.svg";
 
@@ -720,10 +437,7 @@ muteBtn.addEventListener(
 );
 
 
-// ========================================
 // MOUSE PARTICLES
-// ========================================
-
 const mouseCanvas =
   document.getElementById(
     "mouse-particles"
@@ -740,7 +454,6 @@ let mouseMoving = false;
 
 
 function resizeMouseCanvas() {
-
   mouseCanvas.width =
     player.clientWidth;
 
@@ -748,9 +461,7 @@ function resizeMouseCanvas() {
     player.clientHeight;
 }
 
-
 resizeMouseCanvas();
-
 
 window.addEventListener(
   "resize",
@@ -761,31 +472,19 @@ window.addEventListener(
 player.addEventListener(
   "mousemove",
   function (event) {
-
     const rect =
       player.getBoundingClientRect();
 
-
     mouseX =
-      event.clientX -
-      rect.left;
+      event.clientX - rect.left;
 
     mouseY =
-      event.clientY -
-      rect.top;
-
+      event.clientY - rect.top;
 
     mouseMoving = true;
 
-
-    for (
-      let i = 0;
-      i < 3;
-      i++
-    ) {
-
+    for (let i = 0; i < 3; i++) {
       mouseParticles.push({
-
         x:
           mouseX +
           (Math.random() - 0.5) * 20,
@@ -835,18 +534,13 @@ player.addEventListener(
 player.addEventListener(
   "mouseleave",
   function () {
-
     mouseMoving = false;
   }
 );
 
 
-// ========================================
 // DRAW MOUSE PARTICLES
-// ========================================
-
 function drawMouseParticles() {
-
   mouseCtx.clearRect(
     0,
     0,
@@ -854,17 +548,13 @@ function drawMouseParticles() {
     mouseCanvas.height
   );
 
-
   for (
-    let i =
-      mouseParticles.length - 1;
+    let i = mouseParticles.length - 1;
     i >= 0;
     i--
   ) {
-
     const particle =
       mouseParticles[i];
-
 
     particle.x +=
       particle.speedX;
@@ -872,7 +562,6 @@ function drawMouseParticles() {
     particle.y +=
       particle.speedY;
 
-
     particle.x +=
       (Math.random() - 0.5) *
       1.5;
@@ -881,45 +570,30 @@ function drawMouseParticles() {
       (Math.random() - 0.5) *
       1.5;
 
-
     particle.rotation +=
       particle.rotationSpeed;
-
 
     particle.life -=
       0.025;
 
-
-    if (
-      particle.life <= 0
-    ) {
-
-      mouseParticles.splice(
-        i,
-        1
-      );
-
+    if (particle.life <= 0) {
+      mouseParticles.splice(i, 1);
       continue;
     }
 
-
     mouseCtx.save();
-
 
     mouseCtx.translate(
       particle.x,
       particle.y
     );
 
-
     mouseCtx.rotate(
       particle.rotation
     );
 
-
     mouseCtx.globalAlpha =
       particle.life;
-
 
     mouseCtx.shadowBlur =
       15;
@@ -930,9 +604,7 @@ function drawMouseParticles() {
     mouseCtx.fillStyle =
       particle.color;
 
-
     mouseCtx.beginPath();
-
 
     mouseCtx.arc(
       0,
@@ -942,164 +614,253 @@ function drawMouseParticles() {
       Math.PI * 2
     );
 
-
     mouseCtx.fill();
-
 
     mouseCtx.restore();
   }
-
 
   requestAnimationFrame(
     drawMouseParticles
   );
 }
 
-
 drawMouseParticles();
 
 
-// ========================================
 // PLAYLIST
-// ========================================
-
 const playlistButton =
   document.querySelector(
     'a[href="playlist.html"]'
   );
 
 
-// ========================================
+// HOME BUTTON
+const homeButton =
+  document.querySelector(
+    'a[href="index.html"]'
+  );
+
+
 // CHANGE YOUR FILE NAMES HERE
-// ========================================
-
 const playlist = [
-
   {
     video: "video/sphere.mp4",
     audio: "audio/montagem.mp3"
   },
-
   {
-    video: "video/wave.mp4",
+    video: "video/wave1.mp4",
     audio: "audio/beat.mp3"
   }
-
 ];
 
 
-// Current playlist number
+// PRELOAD PLAYLIST
+const preloadVideos = [];
+const preloadAudios = [];
 
+playlist.forEach(
+  function (item, index) {
+
+    const preloadVideo =
+      document.createElement("video");
+
+    preloadVideo.src =
+      item.video;
+
+    preloadVideo.preload =
+      "auto";
+
+    preloadVideo.muted =
+      true;
+
+    preloadVideo.load();
+
+    preloadVideos[index] =
+      preloadVideo;
+
+
+    const preloadAudio =
+      document.createElement("audio");
+
+    preloadAudio.src =
+      item.audio;
+
+    preloadAudio.preload =
+      "auto";
+
+    preloadAudio.load();
+
+    preloadAudios[index] =
+      preloadAudio;
+  }
+);
+
+
+// Current playlist number
 let currentPlaylist = 0;
 
 
-// ========================================
 // CLICK PLAYLIST
-// ========================================
-
 playlistButton.addEventListener(
   "click",
   function (event) {
 
     event.preventDefault();
 
-
-    // Go to next playlist
+    player.classList.remove(
+      "home-view"
+    );
 
     currentPlaylist++;
 
-
-    // Go back to first playlist
-    // when reaching the end
-
     if (
-      currentPlaylist >= playlist.length
+      currentPlaylist >=
+      playlist.length
     ) {
-
       currentPlaylist = 0;
     }
-
 
     const selectedPlaylist =
       playlist[currentPlaylist];
 
-
-    // ====================================
-    // CHANGE VIDEO
-    // ====================================
-
-    video.src =
-      selectedPlaylist.video;
+    const selectedPreloadVideo =
+      preloadVideos[currentPlaylist];
 
 
-    // ====================================
-    // CHANGE AUDIO
-    // ====================================
+    // KEEP CURRENT VIDEO IMAGE
+    // WHILE NEW VIDEO LOADS
+    let oldFrame = null;
 
-    audio.src =
-      selectedPlaylist.audio;
+    try {
+      const frameCanvas =
+        document.createElement("canvas");
+
+      frameCanvas.width =
+        video.videoWidth;
+
+      frameCanvas.height =
+        video.videoHeight;
+
+      if (
+        frameCanvas.width > 0 &&
+        frameCanvas.height > 0
+      ) {
+        const frameContext =
+          frameCanvas.getContext("2d");
+
+        frameContext.drawImage(
+          video,
+          0,
+          0,
+          frameCanvas.width,
+          frameCanvas.height
+        );
+
+        oldFrame =
+          frameCanvas.toDataURL(
+            "image/jpeg"
+          );
+
+        video.style.backgroundImage =
+          `url("${oldFrame}")`;
+
+        video.style.backgroundSize =
+          "cover";
+
+        video.style.backgroundPosition =
+          "center";
+      }
+    } catch (error) {
+      console.log(
+        "Could not save previous frame."
+      );
+    }
 
 
-    // ====================================
-    // RELOAD VIDEO + AUDIO
-    // ====================================
+    function switchPlaylist() {
 
-    video.load();
-    audio.load();
+      video.src =
+        selectedPlaylist.video;
 
+      audio.src =
+        selectedPlaylist.audio;
 
-    // ====================================
-    // RESET PLAYBACK
-    // ====================================
+      video.currentTime =
+        0;
 
-    video.currentTime = 0;
-    audio.currentTime = 0;
+      audio.currentTime =
+        0;
 
+      playPauseImg.src =
+        "image/play.svg";
 
-    // ====================================
-    // UPDATE BUTTON
-    // ====================================
+      playPauseImg.alt =
+        "Play";
 
-    playPauseImg.src =
-      "image/play.svg";
-
-    playPauseImg.alt =
-      "Play";
+      player.classList.remove(
+        "playing"
+      );
 
 
-    player.classList.remove(
-      "playing"
-    );
+      // REMOVE OLD FRAME
+      // AFTER NEW VIDEO IS READY
+      function removeOldFrame() {
+        video.style.backgroundImage =
+          "";
+
+        video.style.backgroundSize =
+          "";
+
+        video.style.backgroundPosition =
+          "";
+
+        video.removeEventListener(
+          "canplay",
+          removeOldFrame
+        );
+      }
+
+      video.addEventListener(
+        "canplay",
+        removeOldFrame
+      );
+    }
+
+
+    // IF PRELOADED VIDEO IS READY
+    if (
+      selectedPreloadVideo.readyState >= 3
+    ) {
+      switchPlaylist();
+    } else {
+
+      selectedPreloadVideo.addEventListener(
+        "canplay",
+        switchPlaylist,
+        {
+          once: true
+        }
+      );
+
+    }
 
   }
 );
 
 
-// ========================================
 // CLICK HOME
-// ========================================
-
 homeButton.addEventListener(
   "click",
   function (event) {
 
     event.preventDefault();
 
-
-    // Show HOME introduction
-
     player.classList.add(
       "home-view"
     );
 
-
-    // Stop music and video
-
     video.pause();
     audio.pause();
-
-
-    // Reset play button
 
     playPauseImg.src =
       "image/play.svg";
@@ -1107,12 +868,81 @@ homeButton.addEventListener(
     playPauseImg.alt =
       "Play";
 
-
-    // Remove playing animation
-
     player.classList.remove(
       "playing"
     );
+  }
+);
+
+
+// JUMP TO 15 / 30 SECONDS
+function jumpToTime(seconds) {
+
+  player.classList.remove(
+    "home-view"
+  );
+
+  video.currentTime =
+    seconds;
+
+  audio.currentTime =
+    seconds;
+
+  video.play();
+  audio.play();
+
+  player.classList.add(
+    "playing"
+  );
+
+  playPauseImg.src =
+    "image/pause.svg";
+
+  playPauseImg.alt =
+    "Pause";
+}
+
+
+// BUTTON 1
+const jump15Btn =
+  document.getElementById(
+    "jump-15-btn"
+  );
+
+jump15Btn.addEventListener(
+  "click",
+  function () {
+    jumpToTime(15);
+  }
+);
+
+
+// BUTTON 2
+const jump30Btn =
+  document.getElementById(
+    "jump-30-btn"
+  );
+
+jump30Btn.addEventListener(
+  "click",
+  function () {
+    jumpToTime(30);
+  }
+);
+
+
+// KEYBOARD 1 / 2
+document.addEventListener(
+  "keydown",
+  function (event) {
+
+    if (event.key === "1") {
+      jumpToTime(15);
+    }
+
+    if (event.key === "2") {
+      jumpToTime(30);
+    }
 
   }
 );
