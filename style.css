@@ -6,28 +6,57 @@ body {
 }
 
 header h1 {
+  position: absolute;
+  top: -40px;
+  left: 50px;
+  rotate: -30deg;
   text-align: left;
   padding: 20px;
 }
 header h2 {
+  position: absolute;
+  top: -40px;
+  left: 350px;
+  rotate: 9deg;
   text-align: center;
   padding: 20px;
 }
 header h3{
+    position: absolute;
+  top: -40px;
+  left: 900px;
+  rotate: 30deg;
   text-align: right;
   padding: 20px;
 }
 header h4{
+  position: absolute;
+  top: -40px;
+  left: 190px;
+  rotate: 4deg;
   text-align: right;
   padding: 20px;
 }
 header h5{
+  position: absolute;
+  top: -40px;
+  left: 590px;
+  rotate: 4deg;
+  text-align: right;
+  rotate: -30deg;
+  padding: 20px;
+}
+header h6{
+  position: absolute;
+  top: -40px;
+  left: 890px;
+  rotate: 30deg;
   text-align: right;
   rotate: -30deg;
   padding: 20px;
 }
 
-header h1, header h2, header h3 ,header h4, header h5 {
+header h1, header h2, header h3 ,header h4, header h5, header h6 {
   margin: 0;
   color: white;
   font-family: Arial, sans-serif;
