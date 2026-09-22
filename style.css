@@ -15,56 +15,131 @@ body {
 
 header {
   position: relative;
+
+  width: 90%;
+  max-width: 1000px;
+
   height: 110px;
-  margin-bottom: 10px;
+
+  margin: 0 auto 10px;
 }
+
+
+/* ========================================
+   FEEL
+======================================== */
 
 header h1 {
   position: absolute;
+
   top: 30px;
-  left: 200px;
+  left: 80px;
+
   rotate: -30deg;
+
   padding: 10px;
 }
+
+
+/* ========================================
+   THE
+======================================== */
 
 header h2 {
   position: absolute;
+
   top: 60px;
-  left: 540px;
+  left: 390px;
+
   rotate: 9deg;
+
   padding: 10px;
 }
+
+
+/* ========================================
+   BEAT
+======================================== */
 
 header h3 {
   position: absolute;
+
   top: 50px;
-  left: 850px;
+  left: 700px;
+
   rotate: -30deg;
+
   padding: 10px;
 }
 
+
+/* ========================================
+   DECORATIVE !
+======================================== */
+
 header h4 {
   position: absolute;
+
   top: 0px;
-  left: 350px;
+  left: 230px;
+
   rotate: 4deg;
+
   padding: 10px;
 }
 
 header h5 {
   position: absolute;
+
   top: 0px;
-  left: 640px;
+  left: 520px;
+
   rotate: -30deg;
+
   padding: 10px;
 }
 
 header h6 {
   position: absolute;
+
   top: 0px;
-  left: 1000px;
+  left: 880px;
+
   rotate: -30deg;
+
   padding: 10px;
+}
+
+
+/* ========================================
+   HEADER TEXT STYLE
+======================================== */
+
+header h1,
+header h2,
+header h3,
+header h4,
+header h5,
+header h6 {
+  margin: 0;
+
+  color: white;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 38px;
+
+  font-weight: bold;
+
+  letter-spacing: 6px;
+
+  text-shadow:
+    0 0 5px #ff2bd6,
+    0 0 15px #ff2bd6,
+    0 0 30px #a855f7,
+    0 0 50px #a855f7;
+
+  animation: headerGlow 2s ease-in-out infinite;
 }
 
 
