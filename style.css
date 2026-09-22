@@ -5,6 +5,14 @@ body {
   font-family: Arial, sans-serif;
 }
 
+
+/*
+  I used a dark background because it creates stronger contrast
+  with the pink and purple neon elements. This helps the interface
+  feel more like a DJ or nightclub environment rather than a
+  normal media player.
+*/
+
 header {
   position: relative;
   height: 110px;
@@ -14,7 +22,7 @@ header {
 header h1 {
   position: absolute;
   top: 30px;
-  left: 150px;
+  left: 200px;
   rotate: -30deg;
   padding: 10px;
 }
@@ -22,7 +30,7 @@ header h1 {
 header h2 {
   position: absolute;
   top: 60px;
-  left: 490px;
+  left: 540px;
   rotate: 9deg;
   padding: 10px;
 }
@@ -30,7 +38,7 @@ header h2 {
 header h3 {
   position: absolute;
   top: 50px;
-  left: 800px;
+  left: 850px;
   rotate: -30deg;
   padding: 10px;
 }
@@ -38,7 +46,7 @@ header h3 {
 header h4 {
   position: absolute;
   top: 0px;
-  left: 300px;
+  left: 350px;
   rotate: 4deg;
   padding: 10px;
 }
@@ -46,7 +54,7 @@ header h4 {
 header h5 {
   position: absolute;
   top: 0px;
-  left: 590px;
+  left: 640px;
   rotate: -30deg;
   padding: 10px;
 }
@@ -54,23 +62,38 @@ header h5 {
 header h6 {
   position: absolute;
   top: 0px;
-  left: 950px;
+  left: 1000px;
   rotate: -30deg;
   padding: 10px;
 }
 
-header h1, header h2, header h3 ,header h4, header h5, header h6 {
+
+/*
+  I separated and rotated the header elements rather than using
+  one straight title. The uneven arrangement gives the page more
+  movement and reflects the energetic feeling of music and DJ
+  performance.
+*/
+
+header h1,
+header h2,
+header h3,
+header h4,
+header h5,
+header h6 {
   margin: 0;
   color: white;
   font-family: Arial, sans-serif;
   font-size: 38px;
   font-weight: bold;
   letter-spacing: 6px;
+
   text-shadow:
     0 0 5px #ff2bd6,
     0 0 15px #ff2bd6,
     0 0 30px #a855f7,
     0 0 50px #a855f7;
+
   animation: headerGlow 2s ease-in-out infinite;
 }
 
@@ -118,6 +141,14 @@ header h1, header h2, header h3 ,header h4, header h5, header h6 {
 .video-tabs li {
   list-style: none;
 }
+
+
+/*
+  I positioned the navigation manually because I wanted the
+  controls to feel more experimental and less like a standard
+  website navigation bar. The neon border also keeps the controls
+  visually connected to the rest of the player.
+*/
 
 .video-tabs li:nth-child(1) {
   position: relative;
@@ -211,6 +242,14 @@ header h1, header h2, header h3 ,header h4, header h5, header h6 {
     0 0 55px #a855f7,
     0 0 90px rgba(168, 85, 247, 0.5);
 }
+
+
+/*
+  The playing state gives visual feedback when the media is active.
+  Instead of changing the whole interface, I used a small scale
+  movement and glow so the visual remains readable while still
+  responding to the music experience.
+*/
 
 #custom-video-player.playing {
   animation: skullPulse 2s ease-in-out infinite;
@@ -389,6 +428,14 @@ header h1, header h2, header h3 ,header h4, header h5, header h6 {
    DISC
 ======================================== */
 
+
+/*
+  The disc is an extra interactive feature based on the DJ context.
+  I wanted the user to physically drag something that represents
+  controlling music. The grab cursor also provides a simple visual
+  indication that the disc can be interacted with.
+*/
+
 .disc {
   position: absolute;
 
@@ -476,6 +523,15 @@ header h1, header h2, header h3 ,header h4, header h5, header h6 {
 /* ========================================
    GLITCH EFFECT
 ======================================== */
+
+
+/*
+  The glitch lines were developed as additional feedback for
+  the disc interaction. I wanted dragging the disc to produce
+  something visual as well as sound. I used random directions,
+  sizes and colours so the effect did not look identical every
+  time the user interacted with it.
+*/
 
 .splash {
   position: absolute;
@@ -672,6 +728,15 @@ header h1, header h2, header h3 ,header h4, header h5, header h6 {
    MOUSE PARTICLES
 ======================================== */
 
+
+/*
+  The mouse particles make the interface react directly to the
+  user's movement. I wanted the cursor to feel like part of the
+  visual environment instead of only being a navigation tool.
+  The canvas allows many small particles to appear without adding
+  extra HTML elements to the page.
+*/
+
 #mouse-particles {
   position: absolute;
 
@@ -760,7 +825,6 @@ footer a:hover {
   z-index: 6;
 }
 
-
 .home-intro-content {
   width: 85%;
   max-width: 850px;
@@ -769,7 +833,6 @@ footer a:hover {
 
   padding: 35px 0 40px;
 }
-
 
 .home-intro h2 {
   margin: 0 0 30px;
@@ -790,6 +853,12 @@ footer a:hover {
 }
 
 
+/*
+  The home page uses sections instead of a large block of text.
+  This keeps the project explanation readable while maintaining
+  the same neon visual language as the main player.
+*/
+
 .intro-section {
   margin-bottom: 20px;
 
@@ -807,7 +876,6 @@ footer a:hover {
       rgba(168, 85, 247, 0.18);
 }
 
-
 .intro-section h3 {
   margin: 0 0 8px;
 
@@ -820,7 +888,6 @@ footer a:hover {
   text-shadow:
     0 0 8px #ff2bd6;
 }
-
 
 .intro-section p {
   margin: 6px 0;
@@ -845,14 +912,17 @@ footer a:hover {
   display: none;
 }
 
-
 .media-player.home-view
 .home-intro {
   display: block;
 }
 
 
-/* Hide player controls while HOME is open */
+/*
+  When HOME is open, I hide the playback controls because they
+  are not needed while reading the project information. This
+  keeps the interface focused on the selected page.
+*/
 
 .media-player.home-view .disc,
 .media-player.home-view #mouse-particles,
@@ -923,7 +993,11 @@ footer a:hover {
   }
 
 }
-/* JUMP BUTTONS */
+
+
+/* ========================================
+   JUMP BUTTONS
+======================================== */
 
 .jump-btn {
   position: absolute;
@@ -951,19 +1025,26 @@ footer a:hover {
     filter 0.3s ease;
 }
 
-/* 1 */
+
+/*
+  The quick jump buttons were added to make navigation through
+  the visual easier. They give the user a faster way to explore
+  specific moments instead of always using the progress bar.
+*/
+
 #jump-15-btn {
   left: 490px;
   height: 30px;
 }
 
-/* 2 */
 #jump-30-btn {
   left: 550px;
   height: 30px;
 }
 
+
 /* HOVER */
+
 .jump-btn:hover img {
   transform: scale(1.1);
 
@@ -973,16 +1054,31 @@ footer a:hover {
     drop-shadow(0 0 40px #a855f7);
 }
 
+
 /* CLICK */
+
 .jump-btn:active img {
   transform: scale(0.95);
 }
+
+
 /* ========================================
    MOVING STAR BACKGROUND
 ======================================== */
 
+
+/*
+  I used a canvas for the moving star background because it allows
+  the stars to be generated and animated with JavaScript. I asked
+  ChatGPT for guidance while learning this technique, then changed
+  the number, speed, size and opacity values myself. I kept the
+  stars slow and subtle so they support the futuristic atmosphere
+  without competing with the main video.
+*/
+
 #star-background {
   position: absolute;
+
   top: 0;
   left: 0;
 

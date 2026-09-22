@@ -6,7 +6,17 @@ const playPauseImg = document.getElementById("play-pause-img");
 const rewindBackBtn = document.getElementById("rewind-back-btn");
 const rewindForwardBtn = document.getElementById("rewind-forward-btn");
 
+
 // PLAY / PAUSE
+
+/*
+  I synchronised the video and audio because I wanted the visual
+  and music to behave as one media experience. Resetting both
+  times when Play is pressed also makes the interaction easier
+  to understand because the main Play action starts from the
+  beginning.
+*/
+
 function togglePlayPause() {
   if (audio.paused) {
     video.currentTime = 0;
@@ -33,6 +43,7 @@ function togglePlayPause() {
 
 
 // REWIND BACK
+
 rewindBackBtn.addEventListener("click", function () {
   video.currentTime = Math.max(0, video.currentTime - 5);
   audio.currentTime = Math.max(0, audio.currentTime - 5);
@@ -40,6 +51,7 @@ rewindBackBtn.addEventListener("click", function () {
 
 
 // REWIND FORWARD
+
 rewindForwardBtn.addEventListener("click", function () {
   video.currentTime = Math.min(video.duration, video.currentTime + 5);
   audio.currentTime = Math.min(audio.duration, audio.currentTime + 5);
@@ -47,10 +59,12 @@ rewindForwardBtn.addEventListener("click", function () {
 
 
 // VIDEO TABS
+
 const videoTabs = document.querySelectorAll(".video-tabs a");
 
 videoTabs.forEach(function (tab) {
   tab.addEventListener("click", function () {
+
     videoTabs.forEach(function (item) {
       item.classList.remove("active");
     });
@@ -61,6 +75,7 @@ videoTabs.forEach(function (tab) {
 
 
 // LIKE BUTTON
+
 const likeBtn = document.getElementById("like-btn");
 const likeCount = document.getElementById("like-count");
 
@@ -73,6 +88,7 @@ likeBtn.addEventListener("click", function () {
 
 
 // DISC
+
 const disc = document.querySelector(".disc");
 
 let isDraggingDisc = false;
@@ -81,6 +97,15 @@ let discRotation = 0;
 
 
 // SCRATCH AUDIO
+
+/*
+  The scratch effect was one of the more experimental parts of
+  the project. I wanted dragging the disc to create audio feedback
+  instead of only moving an image. I used JavaScript Web Audio
+  techniques with guidance from ChatGPT, then adjusted the sound
+  intensity and frequency through testing.
+*/
+
 let scratchAudioContext;
 let scratchSource;
 let scratchGain;
@@ -90,6 +115,7 @@ let scratchOscGain;
 
 
 // START DRAGGING DISC
+
 disc.addEventListener("mousedown", function (event) {
   isDraggingDisc = true;
   lastMouseX = event.clientX;
@@ -97,7 +123,9 @@ disc.addEventListener("mousedown", function (event) {
 
 
 // DISC MOVEMENT
+
 document.addEventListener("mousemove", function (event) {
+
   if (!isDraggingDisc) return;
 
   const movement = event.clientX - lastMouseX;
@@ -110,7 +138,17 @@ document.addEventListener("mousemove", function (event) {
 
   playScratchSound(speed);
 
+
+  /*
+    I connected the speed of the mouse movement to the amount of
+    glitch feedback. Faster dragging creates more lines, making
+    the interaction feel stronger. I tested different particle
+    counts so the screen would remain energetic without becoming
+    completely covered.
+  */
+
   if (speed > 1) {
+
     let particleCount;
 
     if (speed < 4) {
@@ -127,9 +165,11 @@ document.addEventListener("mousemove", function (event) {
     );
 
     for (let i = 0; i < particleCount; i++) {
+
       setTimeout(function () {
         spawnGlitchLine(speed);
       }, i * 12);
+
     }
   }
 
@@ -138,10 +178,13 @@ document.addEventListener("mousemove", function (event) {
 
 
 // STOP DRAGGING
+
 document.addEventListener("mouseup", function () {
+
   isDraggingDisc = false;
 
   if (scratchGain && scratchAudioContext) {
+
     scratchGain.gain.setTargetAtTime(
       0,
       scratchAudioContext.currentTime,
@@ -158,7 +201,15 @@ document.addEventListener("mouseup", function () {
 
 
 // GLITCH / ELECTRIC LINES
+
+/*
+  Each glitch line is generated with random direction, distance,
+  thickness and length. This makes the feedback less predictable
+  and gives the disc interaction a more experimental visual style.
+*/
+
 function spawnGlitchLine(speed) {
+
   const line = document.createElement("span");
 
   line.classList.add("glitch-line");
@@ -245,8 +296,19 @@ function spawnGlitchLine(speed) {
 
 
 // SCRATCH SOUND
+
 function playScratchSound(speed) {
+
+  /*
+    I created a noise buffer and filter so the scratch sound could
+    respond to the user's disc movement. The speed is converted
+    into intensity, volume and frequency. This was something I
+    needed to experiment with because small changes in these values
+    noticeably changed the sound.
+  */
+
   if (!scratchAudioContext) {
+
     scratchAudioContext =
       new (
         window.AudioContext ||
@@ -276,6 +338,7 @@ function playScratchSound(speed) {
       buffer.getChannelData(0);
 
     for (let i = 0; i < bufferSize; i++) {
+
       data[i] =
         Math.random() * 2 - 1;
     }
@@ -308,6 +371,7 @@ function playScratchSound(speed) {
       0;
 
     scratchSource.start();
+
 
     scratchOscillator =
       scratchAudioContext.createOscillator();
@@ -381,6 +445,7 @@ function playScratchSound(speed) {
 
 
 // FULLSCREEN
+
 const fullscreenBtn =
   document.getElementById(
     "fullscreen-btn"
@@ -391,19 +456,32 @@ const videoPlayer =
     "custom-video-player"
   );
 
+
+/*
+  Fullscreen was added because the visual is an important part of
+  the media experience. Allowing the video to fill the screen gives
+  the user a more immersive way to experience the visual.
+*/
+
 fullscreenBtn.addEventListener(
   "click",
   function () {
+
     if (!document.fullscreenElement) {
+
       videoPlayer.requestFullscreen();
+
     } else {
+
       document.exitFullscreen();
+
     }
   }
 );
 
 
 // MUTE
+
 const muteBtn =
   document.getElementById(
     "mute-btn"
@@ -417,16 +495,20 @@ const muteImg =
 muteBtn.addEventListener(
   "click",
   function () {
+
     audio.muted =
       !audio.muted;
 
     if (audio.muted) {
+
       muteImg.src =
         "image/mute.svg";
 
       muteImg.alt =
         "Unmute";
+
     } else {
+
       muteImg.src =
         "image/sound.svg";
 
@@ -438,6 +520,15 @@ muteBtn.addEventListener(
 
 
 // MOUSE PARTICLES
+
+/*
+  I used a separate canvas for the mouse particles so the particles
+  could move independently from the video. I learned the basic
+  canvas approach through experimentation and guidance, then
+  changed the particle size, movement and lifetime to match my
+  neon visual style.
+*/
+
 const mouseCanvas =
   document.getElementById(
     "mouse-particles"
@@ -454,6 +545,7 @@ let mouseMoving = false;
 
 
 function resizeMouseCanvas() {
+
   mouseCanvas.width =
     player.clientWidth;
 
@@ -472,6 +564,7 @@ window.addEventListener(
 player.addEventListener(
   "mousemove",
   function (event) {
+
     const rect =
       player.getBoundingClientRect();
 
@@ -483,8 +576,11 @@ player.addEventListener(
 
     mouseMoving = true;
 
+
     for (let i = 0; i < 3; i++) {
+
       mouseParticles.push({
+
         x:
           mouseX +
           (Math.random() - 0.5) * 20,
@@ -540,7 +636,9 @@ player.addEventListener(
 
 
 // DRAW MOUSE PARTICLES
+
 function drawMouseParticles() {
+
   mouseCtx.clearRect(
     0,
     0,
@@ -553,6 +651,7 @@ function drawMouseParticles() {
     i >= 0;
     i--
   ) {
+
     const particle =
       mouseParticles[i];
 
@@ -577,6 +676,7 @@ function drawMouseParticles() {
       0.025;
 
     if (particle.life <= 0) {
+
       mouseParticles.splice(i, 1);
       continue;
     }
@@ -628,6 +728,7 @@ drawMouseParticles();
 
 
 // PLAYLIST
+
 const playlistButton =
   document.querySelector(
     'a[href="playlist.html"]'
@@ -635,6 +736,7 @@ const playlistButton =
 
 
 // HOME BUTTON
+
 const homeButton =
   document.querySelector(
     'a[href="index.html"]'
@@ -642,6 +744,7 @@ const homeButton =
 
 
 // CHANGE YOUR FILE NAMES HERE
+
 const playlist = [
   {
     video: "video/sphere.mp4",
@@ -655,6 +758,14 @@ const playlist = [
 
 
 // PRELOAD PLAYLIST
+
+/*
+  I used preloading so the second combination of video and audio
+  can begin loading before it is selected. I learned about this
+  approach while developing the playlist interaction and kept it
+  because it can reduce the visible delay when changing media.
+*/
+
 const preloadVideos = [];
 const preloadAudios = [];
 
@@ -697,10 +808,12 @@ playlist.forEach(
 
 
 // Current playlist number
+
 let currentPlaylist = 0;
 
 
 // CLICK PLAYLIST
+
 playlistButton.addEventListener(
   "click",
   function (event) {
@@ -727,11 +840,17 @@ playlistButton.addEventListener(
       preloadVideos[currentPlaylist];
 
 
-    // KEEP CURRENT VIDEO IMAGE
-    // WHILE NEW VIDEO LOADS
+    /*
+      I wanted the previous visual to remain visible while the new
+      video was loading. I used a temporary canvas frame for this
+      transition so that changing playlists did not immediately
+      expose a blank video area.
+    */
+
     let oldFrame = null;
 
     try {
+
       const frameCanvas =
         document.createElement("canvas");
 
@@ -745,6 +864,7 @@ playlistButton.addEventListener(
         frameCanvas.width > 0 &&
         frameCanvas.height > 0
       ) {
+
         const frameContext =
           frameCanvas.getContext("2d");
 
@@ -770,7 +890,9 @@ playlistButton.addEventListener(
         video.style.backgroundPosition =
           "center";
       }
+
     } catch (error) {
+
       console.log(
         "Could not save previous frame."
       );
@@ -803,8 +925,9 @@ playlistButton.addEventListener(
 
 
       // REMOVE OLD FRAME
-      // AFTER NEW VIDEO IS READY
+
       function removeOldFrame() {
+
         video.style.backgroundImage =
           "";
 
@@ -828,10 +951,13 @@ playlistButton.addEventListener(
 
 
     // IF PRELOADED VIDEO IS READY
+
     if (
       selectedPreloadVideo.readyState >= 3
     ) {
+
       switchPlaylist();
+
     } else {
 
       selectedPreloadVideo.addEventListener(
@@ -841,7 +967,6 @@ playlistButton.addEventListener(
           once: true
         }
       );
-
     }
 
   }
@@ -849,6 +974,7 @@ playlistButton.addEventListener(
 
 
 // CLICK HOME
+
 homeButton.addEventListener(
   "click",
   function (event) {
@@ -876,6 +1002,14 @@ homeButton.addEventListener(
 
 
 // JUMP TO 15 / 30 SECONDS
+
+/*
+  The quick jump function is another usability feature. I wanted
+  users to be able to move directly to selected moments of the
+  visual without manually dragging the timeline. Both the video
+  and audio are changed to the same time so they remain aligned.
+*/
+
 function jumpToTime(seconds) {
 
   player.classList.remove(
@@ -904,6 +1038,7 @@ function jumpToTime(seconds) {
 
 
 // BUTTON 1
+
 const jump15Btn =
   document.getElementById(
     "jump-15-btn"
@@ -918,6 +1053,7 @@ jump15Btn.addEventListener(
 
 
 // BUTTON 2
+
 const jump30Btn =
   document.getElementById(
     "jump-30-btn"
@@ -932,6 +1068,7 @@ jump30Btn.addEventListener(
 
 
 // KEYBOARD 1 / 2
+
 document.addEventListener(
   "keydown",
   function (event) {
@@ -946,6 +1083,22 @@ document.addEventListener(
 
   }
 );
+
+
+// ========================================
+// MOVING STAR BACKGROUND
+// ========================================
+
+
+/*
+  The star background was created as an extra visual feature.
+  I asked ChatGPT how to make a simple animated canvas background,
+  then experimented with the values myself. I changed the number
+  of stars, their speed, size and opacity so the animation matched
+  my pink and purple futuristic style without distracting from the
+  main media player.
+*/
+
 const starCanvas =
   document.getElementById(
     "star-background"
@@ -981,6 +1134,12 @@ window.addEventListener(
 // ========================================
 // CREATE STARS
 // ========================================
+
+/*
+  Random values make each star slightly different. This prevents
+  the background from looking like a repeated fixed pattern and
+  makes the movement feel more natural.
+*/
 
 for (
   let i = 0;
@@ -1031,11 +1190,13 @@ function drawStars() {
     function (star) {
 
       // Move star slowly
+
       star.y +=
         star.speed;
 
 
       // Return to top
+
       if (
         star.y >
         starCanvas.height
@@ -1050,6 +1211,7 @@ function drawStars() {
 
 
       // Draw star
+
       starCtx.beginPath();
 
       starCtx.arc(
@@ -1063,7 +1225,8 @@ function drawStars() {
       starCtx.fillStyle =
         `rgba(255, 255, 255, ${star.opacity})`;
 
-      starCtx.shadowBlur = 8;
+      starCtx.shadowBlur =
+        8;
 
       starCtx.shadowColor =
         "#d946ef";
