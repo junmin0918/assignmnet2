@@ -5,55 +5,58 @@ body {
   font-family: Arial, sans-serif;
 }
 
+header {
+  position: relative;
+  height: 110px;
+  margin-bottom: 10px;
+}
+
 header h1 {
   position: absolute;
-  top: -40px;
-  left: 50px;
+  top: 30px;
+  left: 150px;
   rotate: -30deg;
-  text-align: left;
-  padding: 20px;
+  padding: 10px;
 }
+
 header h2 {
   position: absolute;
-  top: -40px;
-  left: 350px;
+  top: 60px;
+  left: 490px;
   rotate: 9deg;
-  text-align: center;
-  padding: 20px;
+  padding: 10px;
 }
-header h3{
-    position: absolute;
-  top: -40px;
-  left: 900px;
-  rotate: 30deg;
-  text-align: right;
-  padding: 20px;
-}
-header h4{
+
+header h3 {
   position: absolute;
-  top: -40px;
-  left: 190px;
+  top: 50px;
+  left: 800px;
+  rotate: -30deg;
+  padding: 10px;
+}
+
+header h4 {
+  position: absolute;
+  top: 0px;
+  left: 300px;
   rotate: 4deg;
-  text-align: right;
-  padding: 20px;
+  padding: 10px;
 }
-header h5{
+
+header h5 {
   position: absolute;
-  top: -40px;
+  top: 0px;
   left: 590px;
-  rotate: 4deg;
-  text-align: right;
   rotate: -30deg;
-  padding: 20px;
+  padding: 10px;
 }
-header h6{
+
+header h6 {
   position: absolute;
-  top: -40px;
-  left: 890px;
-  rotate: 30deg;
-  text-align: right;
+  top: 0px;
+  left: 950px;
   rotate: -30deg;
-  padding: 20px;
+  padding: 10px;
 }
 
 header h1, header h2, header h3 ,header h4, header h5, header h6 {
