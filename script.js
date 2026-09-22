@@ -946,3 +946,137 @@ document.addEventListener(
 
   }
 );
+const starCanvas =
+  document.getElementById(
+    "star-background"
+  );
+
+const starCtx =
+  starCanvas.getContext("2d");
+
+const stars = [];
+
+
+// ========================================
+// RESIZE STAR CANVAS
+// ========================================
+
+function resizeStarCanvas() {
+
+  starCanvas.width =
+    player.clientWidth;
+
+  starCanvas.height =
+    player.clientHeight;
+}
+
+resizeStarCanvas();
+
+window.addEventListener(
+  "resize",
+  resizeStarCanvas
+);
+
+
+// ========================================
+// CREATE STARS
+// ========================================
+
+for (
+  let i = 0;
+  i < 45;
+  i++
+) {
+
+  stars.push({
+
+    x:
+      Math.random() *
+      starCanvas.width,
+
+    y:
+      Math.random() *
+      starCanvas.height,
+
+    size:
+      0.5 +
+      Math.random() * 2,
+
+    speed:
+      0.05 +
+      Math.random() * 0.25,
+
+    opacity:
+      0.3 +
+      Math.random() * 0.7
+  });
+}
+
+
+// ========================================
+// DRAW STARS
+// ========================================
+
+function drawStars() {
+
+  starCtx.clearRect(
+    0,
+    0,
+    starCanvas.width,
+    starCanvas.height
+  );
+
+
+  stars.forEach(
+    function (star) {
+
+      // Move star slowly
+      star.y +=
+        star.speed;
+
+
+      // Return to top
+      if (
+        star.y >
+        starCanvas.height
+      ) {
+
+        star.y = -5;
+
+        star.x =
+          Math.random() *
+          starCanvas.width;
+      }
+
+
+      // Draw star
+      starCtx.beginPath();
+
+      starCtx.arc(
+        star.x,
+        star.y,
+        star.size,
+        0,
+        Math.PI * 2
+      );
+
+      starCtx.fillStyle =
+        `rgba(255, 255, 255, ${star.opacity})`;
+
+      starCtx.shadowBlur = 8;
+
+      starCtx.shadowColor =
+        "#d946ef";
+
+      starCtx.fill();
+    }
+  );
+
+
+  requestAnimationFrame(
+    drawStars
+  );
+}
+
+
+drawStars();
