@@ -23,40 +23,38 @@
     atmosphere and keep the visual identity consistent.
   -->
 
-  <!-- =========================
-       HEADER
-       ========================= -->
-
   <header>
     <h1>FEEL</h1>
     <h2>THE</h2>
     <h3>BEAT</h3>
     <h4>!</h4>
     <h5>!</h5>
-    <h6>!<h6>
+    <h6>!</h6>
   </header>
 
   <main class="container">
 
     <!--
-      I added a moving star background to make the page feel more
-      immersive and less like an ordinary media player. I used
-      ChatGPT as a learning reference for the basic canvas idea,
-      then tested and adjusted the movement, amount and opacity
-      myself so that the stars stayed subtle behind the interface.
+      I added the moving star background to make the page feel more
+      immersive instead of using only a static background. I asked
+      ChatGPT for help understanding the basic canvas and animation
+      method, then changed the movement, amount and opacity myself.
+      I kept the stars subtle so they support the visual style without
+      distracting from the main media player.
     -->
+
     <canvas id="star-background"></canvas>
 
     <div class="media-player">
 
-      <!-- Mouse particle canvas -->
       <canvas id="mouse-particles"></canvas>
 
       <!--
-        The vinyl disc represents the DJ turntable idea. It also
-        gives the user a physical-looking interaction instead of
-        relying only on normal playback controls.
+        The vinyl disc represents the DJ turntable idea. It gives
+        the user a physical-looking interaction instead of relying
+        only on normal playback controls.
       -->
+
       <div class="disc">
         <div class="disc-center"></div>
       </div>
@@ -78,9 +76,7 @@
       </audio>
 
 
-      <!-- =========================
-           HOME INTRO
-           ========================= -->
+      <!-- HOME INTRO -->
 
       <section
         id="home-intro"
@@ -192,9 +188,7 @@
       </section>
 
 
-      <!-- =========================
-           LIQUID PARTICLES
-           ========================= -->
+      <!-- LIQUID PARTICLES -->
 
       <div class="splash">
 
@@ -210,9 +204,7 @@
       </div>
 
 
-      <!-- =========================
-           VIDEO SELECTOR
-           ========================= -->
+      <!-- VIDEO SELECTOR -->
 
       <div class="video-tabs">
 
@@ -235,9 +227,7 @@
         </nav>
 
 
-        <!-- =========================
-             PLAY BUTTON
-             ========================= -->
+        <!-- PLAY BUTTON -->
 
         <div class="custom-controls">
 
@@ -257,9 +247,7 @@
         </div>
 
 
-        <!-- =========================
-             REWIND BUTTONS
-             ========================= -->
+        <!-- REWIND BUTTONS -->
 
         <div class="rewind-controls">
 
@@ -286,6 +274,7 @@
 
 
         <!-- JUMP 15 SECONDS -->
+
         <button
           id="jump-15-btn"
           class="jump-btn"
@@ -298,6 +287,7 @@
 
 
         <!-- JUMP 30 SECONDS -->
+
         <button
           id="jump-30-btn"
           class="jump-btn"
@@ -309,9 +299,7 @@
         </button>
 
 
-        <!-- =========================
-             FULLSCREEN
-             ========================= -->
+        <!-- FULLSCREEN -->
 
         <button id="fullscreen-btn">
 
@@ -323,9 +311,7 @@
         </button>
 
 
-        <!-- =========================
-             MUTE
-             ========================= -->
+        <!-- MUTE -->
 
         <button id="mute-btn">
 
@@ -338,9 +324,7 @@
         </button>
 
 
-        <!-- =========================
-             LIKE
-             ========================= -->
+        <!-- LIKE -->
 
         <div class="playlist-like-container">
 
@@ -364,9 +348,7 @@
         </div>
 
 
-        <!-- =========================
-             PROGRESS BAR
-             ========================= -->
+        <!-- PROGRESS BAR -->
 
         <div class="progress-bar">
 
@@ -383,11 +365,6 @@
     </div>
 
   </main>
-
-
-  <!-- =========================
-       FOOTER
-       ========================= -->
 
 </body>
 

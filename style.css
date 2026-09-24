@@ -25,9 +25,7 @@ header {
 }
 
 
-/* ========================================
-   FEEL
-======================================== */
+/* FEEL */
 
 header h1 {
   position: absolute;
@@ -41,9 +39,7 @@ header h1 {
 }
 
 
-/* ========================================
-   THE
-======================================== */
+/* THE */
 
 header h2 {
   position: absolute;
@@ -57,9 +53,7 @@ header h2 {
 }
 
 
-/* ========================================
-   BEAT
-======================================== */
+/* BEAT */
 
 header h3 {
   position: absolute;
@@ -73,9 +67,7 @@ header h3 {
 }
 
 
-/* ========================================
-   DECORATIVE !
-======================================== */
+/* DECORATIVE ! */
 
 header h4 {
   position: absolute;
@@ -111,38 +103,6 @@ header h6 {
 }
 
 
-/* ========================================
-   HEADER TEXT STYLE
-======================================== */
-
-header h1,
-header h2,
-header h3,
-header h4,
-header h5,
-header h6 {
-  margin: 0;
-
-  color: white;
-
-  font-family: Arial, sans-serif;
-
-  font-size: 38px;
-
-  font-weight: bold;
-
-  letter-spacing: 6px;
-
-  text-shadow:
-    0 0 5px #ff2bd6,
-    0 0 15px #ff2bd6,
-    0 0 30px #a855f7,
-    0 0 50px #a855f7;
-
-  animation: headerGlow 2s ease-in-out infinite;
-}
-
-
 /*
   I separated and rotated the header elements rather than using
   one straight title. The uneven arrangement gives the page more
@@ -172,6 +132,7 @@ header h6 {
   animation: headerGlow 2s ease-in-out infinite;
 }
 
+
 @keyframes headerGlow {
   0% {
     text-shadow:
@@ -197,9 +158,7 @@ header h6 {
 }
 
 
-/* ========================================
-   NAVIGATION
-======================================== */
+/* NAVIGATION */
 
 .video-tabs {
   display: flex;
@@ -279,9 +238,7 @@ header h6 {
 }
 
 
-/* ========================================
-   PLAYER
-======================================== */
+/* PLAYER */
 
 .container {
   width: 100%;
@@ -296,9 +253,7 @@ header h6 {
 }
 
 
-/* ========================================
-   VIDEO
-======================================== */
+/* VIDEO */
 
 #custom-video-player {
   width: 100%;
@@ -358,9 +313,7 @@ header h6 {
 }
 
 
-/* ========================================
-   PLAY BUTTON
-======================================== */
+/* PLAY BUTTON */
 
 .custom-controls {
   position: absolute;
@@ -391,9 +344,7 @@ header h6 {
 }
 
 
-/* ========================================
-   REWIND BUTTONS
-======================================== */
+/* REWIND BUTTONS */
 
 .rewind-controls {
   position: absolute;
@@ -429,9 +380,7 @@ header h6 {
 }
 
 
-/* ========================================
-   LIKE
-======================================== */
+/* LIKE */
 
 .playlist-like-container {
   position: absolute;
@@ -499,15 +448,10 @@ header h6 {
 }
 
 
-/* ========================================
-   DISC
-======================================== */
-
-
 /*
   The disc is an extra interactive feature based on the DJ context.
   I wanted the user to physically drag something that represents
-  controlling music. The grab cursor also provides a simple visual
+  controlling music. The grab cursor also provides a visual
   indication that the disc can be interacted with.
 */
 
@@ -562,9 +506,7 @@ header h6 {
 }
 
 
-/* ========================================
-   PROGRESS BAR
-======================================== */
+/* PROGRESS BAR */
 
 .progress-bar {
   position: absolute;
@@ -595,17 +537,11 @@ header h6 {
 }
 
 
-/* ========================================
-   GLITCH EFFECT
-======================================== */
-
-
 /*
-  The glitch lines were developed as additional feedback for
-  the disc interaction. I wanted dragging the disc to produce
-  something visual as well as sound. I used random directions,
-  sizes and colours so the effect did not look identical every
-  time the user interacted with it.
+  The glitch lines provide extra visual feedback when the vinyl
+  disc is dragged. I used random directions, sizes and colours
+  so the effect changes during interaction rather than repeating
+  exactly the same animation every time.
 */
 
 .splash {
@@ -745,9 +681,7 @@ header h6 {
 }
 
 
-/* ========================================
-   FULLSCREEN + MUTE
-======================================== */
+/* FULLSCREEN + MUTE */
 
 #fullscreen-btn,
 #mute-btn {
@@ -799,17 +733,11 @@ header h6 {
 }
 
 
-/* ========================================
-   MOUSE PARTICLES
-======================================== */
-
-
 /*
   The mouse particles make the interface react directly to the
-  user's movement. I wanted the cursor to feel like part of the
-  visual environment instead of only being a navigation tool.
-  The canvas allows many small particles to appear without adding
-  extra HTML elements to the page.
+  user's movement. I learned the basic canvas approach while
+  developing the effect and then changed the particle size,
+  movement and lifetime to fit my own neon visual style.
 */
 
 #mouse-particles {
@@ -827,9 +755,7 @@ header h6 {
 }
 
 
-/* ========================================
-   FOOTER
-======================================== */
+/* FOOTER */
 
 footer {
   text-align: center;
@@ -858,9 +784,7 @@ footer a:hover {
 }
 
 
-/* ========================================
-   HOME INTRO
-======================================== */
+/* HOME INTRO */
 
 .home-intro {
   display: none;
@@ -929,7 +853,7 @@ footer a:hover {
 
 
 /*
-  The home page uses sections instead of a large block of text.
+  The home page uses sections instead of one large block of text.
   This keeps the project explanation readable while maintaining
   the same neon visual language as the main player.
 */
@@ -978,9 +902,7 @@ footer a:hover {
 }
 
 
-/* ========================================
-   HOME VIEW
-======================================== */
+/* HOME VIEW */
 
 .media-player.home-view
 #custom-video-player {
@@ -1012,9 +934,7 @@ footer a:hover {
 }
 
 
-/* ========================================
-   HOME SCROLLBAR
-======================================== */
+/* HOME SCROLLBAR */
 
 .home-intro::-webkit-scrollbar {
   width: 7px;
@@ -1035,9 +955,7 @@ footer a:hover {
 }
 
 
-/* ========================================
-   HOME RESPONSIVE
-======================================== */
+/* HOME RESPONSIVE */
 
 @media (max-width: 700px) {
 
@@ -1070,9 +988,11 @@ footer a:hover {
 }
 
 
-/* ========================================
-   JUMP BUTTONS
-======================================== */
+/*
+  The quick jump buttons were added as a usability feature.
+  They let users move directly to selected moments instead of
+  always searching manually through the timeline.
+*/
 
 .jump-btn {
   position: absolute;
@@ -1100,13 +1020,6 @@ footer a:hover {
     filter 0.3s ease;
 }
 
-
-/*
-  The quick jump buttons were added to make navigation through
-  the visual easier. They give the user a faster way to explore
-  specific moments instead of always using the progress bar.
-*/
-
 #jump-15-btn {
   left: 490px;
   height: 30px;
@@ -1117,9 +1030,6 @@ footer a:hover {
   height: 30px;
 }
 
-
-/* HOVER */
-
 .jump-btn:hover img {
   transform: scale(1.1);
 
@@ -1129,26 +1039,17 @@ footer a:hover {
     drop-shadow(0 0 40px #a855f7);
 }
 
-
-/* CLICK */
-
 .jump-btn:active img {
   transform: scale(0.95);
 }
 
 
-/* ========================================
-   MOVING STAR BACKGROUND
-======================================== */
-
-
 /*
-  I used a canvas for the moving star background because it allows
-  the stars to be generated and animated with JavaScript. I asked
-  ChatGPT for guidance while learning this technique, then changed
-  the number, speed, size and opacity values myself. I kept the
-  stars slow and subtle so they support the futuristic atmosphere
-  without competing with the main video.
+  ChatGPT was used as a coding support tool for the moving star
+  background. I asked questions when I did not understand how
+  canvas animation worked, then tested and adjusted the code
+  myself. The final speed, size, amount and opacity were chosen
+  to suit my own design rather than using the original example.
 */
 
 #star-background {

@@ -12,9 +12,8 @@ const rewindForwardBtn = document.getElementById("rewind-forward-btn");
 /*
   I synchronised the video and audio because I wanted the visual
   and music to behave as one media experience. Resetting both
-  times when Play is pressed also makes the interaction easier
-  to understand because the main Play action starts from the
-  beginning.
+  times when Play is pressed also makes the main interaction
+  simple to understand.
 */
 
 function togglePlayPause() {
@@ -101,9 +100,9 @@ let discRotation = 0;
 /*
   The scratch effect was one of the more experimental parts of
   the project. I wanted dragging the disc to create audio feedback
-  instead of only moving an image. I used JavaScript Web Audio
-  techniques with guidance from ChatGPT, then adjusted the sound
-  intensity and frequency through testing.
+  instead of only moving an image. I asked ChatGPT about the basic
+  Web Audio approach because this was unfamiliar to me, then tested
+  and adjusted the intensity and frequency values myself.
 */
 
 let scratchAudioContext;
@@ -140,11 +139,9 @@ document.addEventListener("mousemove", function (event) {
 
 
   /*
-    I connected the speed of the mouse movement to the amount of
-    glitch feedback. Faster dragging creates more lines, making
-    the interaction feel stronger. I tested different particle
-    counts so the screen would remain energetic without becoming
-    completely covered.
+    I connected mouse speed to the visual glitch feedback.
+    Faster dragging creates more lines, so the interaction
+    feels stronger when the user moves the disc faster.
   */
 
   if (speed > 1) {
@@ -203,9 +200,9 @@ document.addEventListener("mouseup", function () {
 // GLITCH / ELECTRIC LINES
 
 /*
-  Each glitch line is generated with random direction, distance,
-  thickness and length. This makes the feedback less predictable
-  and gives the disc interaction a more experimental visual style.
+  Each glitch line uses random direction, distance, thickness and
+  length. This makes the interaction less predictable and gives
+  the disc movement a more experimental visual style.
 */
 
 function spawnGlitchLine(speed) {
@@ -301,10 +298,9 @@ function playScratchSound(speed) {
 
   /*
     I created a noise buffer and filter so the scratch sound could
-    respond to the user's disc movement. The speed is converted
-    into intensity, volume and frequency. This was something I
-    needed to experiment with because small changes in these values
-    noticeably changed the sound.
+    respond to the user's disc movement. The mouse speed is converted
+    into intensity, volume and frequency. I had to test these values
+    because small changes produced noticeably different sounds.
   */
 
   if (!scratchAudioContext) {
@@ -460,7 +456,7 @@ const videoPlayer =
 /*
   Fullscreen was added because the visual is an important part of
   the media experience. Allowing the video to fill the screen gives
-  the user a more immersive way to experience the visual.
+  users a more immersive way to experience the visual.
 */
 
 fullscreenBtn.addEventListener(
@@ -522,11 +518,10 @@ muteBtn.addEventListener(
 // MOUSE PARTICLES
 
 /*
-  I used a separate canvas for the mouse particles so the particles
-  could move independently from the video. I learned the basic
-  canvas approach through experimentation and guidance, then
-  changed the particle size, movement and lifetime to match my
-  neon visual style.
+  The mouse particles make the interface react directly to the
+  user's movement. I used a canvas so the effect could be animated
+  without adding many separate HTML elements. I then changed the
+  particle size, movement and lifetime to match the neon style.
 */
 
 const mouseCanvas =
@@ -743,7 +738,7 @@ const homeButton =
   );
 
 
-// CHANGE YOUR FILE NAMES HERE
+// PLAYLIST FILES
 
 const playlist = [
   {
@@ -760,10 +755,11 @@ const playlist = [
 // PRELOAD PLAYLIST
 
 /*
-  I used preloading so the second combination of video and audio
-  can begin loading before it is selected. I learned about this
-  approach while developing the playlist interaction and kept it
-  because it can reduce the visible delay when changing media.
+  I used preloading so the video and audio for other playlist
+  combinations can begin loading before they are selected.
+  This was added to reduce the visible delay when changing media.
+  I learned about the basic approach while developing the playlist
+  interaction and adjusted it for my own files.
 */
 
 const preloadVideos = [];
@@ -807,7 +803,7 @@ playlist.forEach(
 );
 
 
-// Current playlist number
+// CURRENT PLAYLIST NUMBER
 
 let currentPlaylist = 0;
 
@@ -842,9 +838,8 @@ playlistButton.addEventListener(
 
     /*
       I wanted the previous visual to remain visible while the new
-      video was loading. I used a temporary canvas frame for this
-      transition so that changing playlists did not immediately
-      expose a blank video area.
+      video was loading. I used a temporary canvas frame so changing
+      playlists would not immediately show a blank video area.
     */
 
     let oldFrame = null;
@@ -924,8 +919,6 @@ playlistButton.addEventListener(
       );
 
 
-      // REMOVE OLD FRAME
-
       function removeOldFrame() {
 
         video.style.backgroundImage =
@@ -949,8 +942,6 @@ playlistButton.addEventListener(
       );
     }
 
-
-    // IF PRELOADED VIDEO IS READY
 
     if (
       selectedPreloadVideo.readyState >= 3
@@ -1004,9 +995,8 @@ homeButton.addEventListener(
 // JUMP TO 15 / 30 SECONDS
 
 /*
-  The quick jump function is another usability feature. I wanted
-  users to be able to move directly to selected moments of the
-  visual without manually dragging the timeline. Both the video
+  The quick jump function improves usability by allowing users
+  to move directly to selected moments of the visual. The video
   and audio are changed to the same time so they remain aligned.
 */
 
@@ -1085,18 +1075,16 @@ document.addEventListener(
 );
 
 
-// ========================================
 // MOVING STAR BACKGROUND
-// ========================================
-
 
 /*
-  The star background was created as an extra visual feature.
-  I asked ChatGPT how to make a simple animated canvas background,
-  then experimented with the values myself. I changed the number
-  of stars, their speed, size and opacity so the animation matched
-  my pink and purple futuristic style without distracting from the
-  main media player.
+  The moving star background was one of the extra visual features
+  that I developed during the project. ChatGPT helped me understand
+  the basic canvas animation because I was not familiar with this
+  technique. I then changed the number, speed, size and opacity of
+  the stars myself to fit the pink and purple futuristic style.
+  I wanted the background to add atmosphere without competing with
+  the video and interactive controls.
 */
 
 const starCanvas =
@@ -1110,9 +1098,7 @@ const starCtx =
 const stars = [];
 
 
-// ========================================
 // RESIZE STAR CANVAS
-// ========================================
 
 function resizeStarCanvas() {
 
@@ -1131,13 +1117,11 @@ window.addEventListener(
 );
 
 
-// ========================================
 // CREATE STARS
-// ========================================
 
 /*
   Random values make each star slightly different. This prevents
-  the background from looking like a repeated fixed pattern and
+  the background from looking like a fixed repeated pattern and
   makes the movement feel more natural.
 */
 
@@ -1172,9 +1156,7 @@ for (
 }
 
 
-// ========================================
 // DRAW STARS
-// ========================================
 
 function drawStars() {
 
@@ -1189,13 +1171,9 @@ function drawStars() {
   stars.forEach(
     function (star) {
 
-      // Move star slowly
-
       star.y +=
         star.speed;
 
-
-      // Return to top
 
       if (
         star.y >
@@ -1209,8 +1187,6 @@ function drawStars() {
           starCanvas.width;
       }
 
-
-      // Draw star
 
       starCtx.beginPath();
 
@@ -1240,6 +1216,5 @@ function drawStars() {
     drawStars
   );
 }
-
 
 drawStars();
